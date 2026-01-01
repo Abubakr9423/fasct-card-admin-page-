@@ -1,10 +1,13 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import img from '../assets/Group 1116606595.png'
-import { Folder, Home, Menu, Search, Send, ShoppingCart } from 'lucide-react'
+import { BellDot, ChevronDown, Folder, Home, Menu, Moon, Search, Send, ShoppingCart, Sun, Tag } from 'lucide-react'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
+import { Button } from '@/components/ui/button';
+import { useTheme } from '@/components/theme-provider';
 
 const Layout = () => {
     const linkStyle = "flex w-full items-center rounded-sm font-bold gap-1 px-3 py-2 transition-colors";
-
+    const { setTheme } = useTheme()
     const activeStyle = "bg-[#FFFFFF] text-[#1C2536]";
 
     const nonActiveStyle = "text-white hover:bg-[#ffffff1a]";
