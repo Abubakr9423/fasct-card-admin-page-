@@ -97,7 +97,6 @@ export const useCategory = create<CategoryState>((set) => ({
     },
 }));
 
-
 export const useProductStore = create<ProductState>((set, get) => ({
     data: null,
     filters: { pageNumber: 1, pageSize: 10 },
