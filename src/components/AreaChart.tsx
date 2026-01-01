@@ -1,19 +1,19 @@
 import Chart from 'react-apexcharts';
-
+import type { ApexOptions } from 'apexcharts';
 
 const AreaChart = () => {
-    const options = {
+    const options: ApexOptions = {
         chart: {
-            type: 'area' as const,
+            type: 'area',
             height: 350,
             stacked: true,
             toolbar: { show: false }
         },
         colors: ['#2563EB'],
         dataLabels: { enabled: false },
-        stroke: { 
+        stroke: {
             curve: 'smooth',
-            width: 2 
+            width: 2
         },
         fill: {
             type: 'gradient',
