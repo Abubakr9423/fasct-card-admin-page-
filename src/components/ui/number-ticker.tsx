@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef, useEffect, useRef } from "react"
+import { useEffect, useRef, type ComponentPropsWithoutRef } from "react"
 import { useInView, useMotionValue, useSpring } from "motion/react"
 
 import { cn } from "@/lib/utils"

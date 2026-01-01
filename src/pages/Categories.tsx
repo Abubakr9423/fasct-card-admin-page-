@@ -1,7 +1,7 @@
 import { Input } from '@/components/ui/input'
 import { useCategory } from '@/store/store';
-import { Delete, FileCheckCorner, Pencil, Search, Trash } from 'lucide-react'
-import React, { useEffect } from 'react'
+import { FileCheckCorner, Pencil, Search, Trash } from 'lucide-react'
+import { useEffect } from 'react';
 
 const Categories = () => {
   const { isCategoria, getCategory } = useCategory();
