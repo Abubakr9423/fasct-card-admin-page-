@@ -7,7 +7,6 @@ import React, { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer } from "react-toastify";
 
-
 const Products = () => {
 
   const { data, fetchProducts, setFilters } = useProductStore((state) => state);
