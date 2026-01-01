@@ -1,6 +1,7 @@
 import { useTheme } from '@/components/theme-provider';
 import { useBeras } from '@/store/store';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { MagicCard } from '@/components/ui/magic-card';
@@ -12,11 +13,14 @@ import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
     const token = GetToken();
+    console.log(jwtDecode(token));
+    
     const decoded: any = jwtDecode(token);
 
-    // normalize roles so it's always an array
     const rawRoles = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
     const roles = Array.isArray(rawRoles) ? rawRoles : [rawRoles];
+    console.log(roles);
+    
 
     const navigate = useNavigate();
     const { theme } = useTheme();
@@ -28,19 +32,14 @@ const Login = () => {
     const { handleSubmit, handleChange, resetForm, values } = useFormik({
         initialValues: { email: "", password: "" },
         onSubmit: async (values) => {
-            // ✅ Only allow Admin or SuperAdmin
             const hasAccess = roles.includes("SuperAdmin") || roles.includes("Admin");
 
             if (hasAccess) {
                 await loginUser({ userName: values.email, password: values.password });
                 resetForm();
                 navigate("/orders");
-
-                // ✅ Save token only for Admin/SuperAdmin
-                localStorage.setItem("token", token);
             } else {
-                console.warn("Access denied: User role cannot log in");
-                // optional: show error message
+                console.error("Access denied: role not allowed", roles);
             }
         },
     });
