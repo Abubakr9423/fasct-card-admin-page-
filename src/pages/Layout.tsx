@@ -1,15 +1,16 @@
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import img from '../assets/Group 1116606595.png'
-import { Folder, Home, Menu, Search, ChevronDown, BellDot, Tag } from 'lucide-react'
+import { Folder, Home, Menu, Search, Send, ShoppingCart } from 'lucide-react'
 
 const Layout = () => {
-    const linkStyle = "flex w-full items-center rounded-md font-bold gap-3 px-4 py-3 transition-all duration-200";
-    const activeStyle = "bg-white text-[#1C2536] shadow-md";
-    const nonActiveStyle = "text-gray-400 hover:bg-[#ffffff10] hover:text-white";
+    const linkStyle = "flex w-full items-center rounded-sm font-bold gap-1 px-3 py-2 transition-colors";
 
     const location = useLocation();
     const isLoginPage = location.pathname === "/";
 
+    const activeStyle = "bg-[#FFFFFF] text-[#1C2536]";
+
+    const nonActiveStyle = "text-white hover:bg-[#ffffff1a]";
     return (
         <div className="min-h-screen flex flex-col">
             {!isLoginPage && (
@@ -44,7 +45,29 @@ const Layout = () => {
                     </section>
                 </nav>
             )}
-
+                    </div>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline" size="icon">
+                                <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+                                <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+                                <span className="sr-only">Toggle theme</span>
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => setTheme("light")}>
+                                Light
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setTheme("dark")}>
+                                Dark
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setTheme("system")}>
+                                System
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </section>
+            </nav>
             <div className='flex flex-1'>
                 {!isLoginPage && (
                 <aside className='bg-[#1C2536] md:w-72  min-h-[calc(100vh-72px)] md:flex hidden flex-col gap-2 p-5 border-r border-gray-700'>
