@@ -10,7 +10,7 @@ import { MoveRight } from 'lucide-react'
 const Dashboard = () => {
   return (
     <main>
-      <section className='p-6 bg-gray-50 w-full min-h-screen'>
+      <section className='md:p-6 bg-gray-50 w-full min-h-screen'>
         <h1 className='font-bold text-3xl mb-6 text-slate-800'>Dashboard</h1>
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
           <aside className='lg:col-span-2 flex flex-col gap-6'>
@@ -171,96 +171,100 @@ const Dashboard = () => {
           <aside>
             <div className='bg-white border border-gray-200 p-5 rounded-xl shadow-sm h-full'>
               <h1 className='font-bold text-[18px] mb-2'>Recent Transactions</h1>
-              <table className='w-full'>
-                <thead className='border-b-2 '>
-                  <tr className='font-semibold text-gray-500 py-1'>
-                    <td>Name</td>
-                    <td>Date</td>
-                    <td>Amount</td>
-                    <td className='text-center'>Status</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className='font-bold py-2'>Jagarnath S.</td>
-                    <td>24.06.2025</td>
-                    <td>$124.97</td>
-                    <td className='py-1'><div className='text-[#06A561] bg-[#C4F8E2] rounded-sm m-auto text-center'>Paid</div></td>
-                  </tr>
-                  <tr>
-                    <td className='font-bold py-2'>Anand G.</td>
-                    <td>24.07.2025</td>
-                    <td>$124.97</td>
-                    <td className='py-1'><div className='text-[#5A607F] bg-[#E6E9F4] rounded-sm m-auto text-center'>Pending</div></td>
-                  </tr>
-                  <tr>
-                    <td className='font-bold py-2'>Kartik S.</td>
-                    <td>24.06.2025</td>
-                    <td>$124.97</td>
-                    <td className='py-1'><div className='text-[#06A561] bg-[#C4F8E2] rounded-sm m-auto text-center'>Paid</div></td>
-                  </tr>
-                  <tr>
-                    <td className='font-bold py-2'>Rakesh S.</td>
-                    <td>24.06.2025</td>
-                    <td>$124.97</td>
-                    <td className='py-1'><div className='text-[#5A607F] bg-[#E6E9F4] rounded-sm m-auto text-center'>Pending</div></td>
-                  </tr>
-                  <tr>
-                    <td className='font-bold py-2'>Anup S.</td>
-                    <td>24.07.2025</td>
-                    <td>$124.97</td>
-                    <td className='py-1'><div className='text-[#06A561] bg-[#C4F8E2] rounded-sm m-auto text-center'>Paid</div></td>
-                  </tr>
-                </tbody>
-              </table>
+              <div className="w-full overflow-x-auto  border-b border-gray-200 ">
+                <table className="w-full text-left border-collapse min-w-[400px]">
+                  <thead className='border-b-2 '>
+                    <tr className='font-semibold text-gray-500 py-1'>
+                      <td>Name</td>
+                      <td>Date</td>
+                      <td>Amount</td>
+                      <td className='text-center'>Status</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className='font-bold py-2'>Jagarnath S.</td>
+                      <td>24.06.2025</td>
+                      <td>$124.97</td>
+                      <td className='py-1'><div className='text-[#06A561] bg-[#C4F8E2] rounded-sm m-auto text-center'>Paid</div></td>
+                    </tr>
+                    <tr>
+                      <td className='font-bold py-2'>Anand G.</td>
+                      <td>24.07.2025</td>
+                      <td>$124.97</td>
+                      <td className='py-1'><div className='text-[#5A607F] bg-[#E6E9F4] rounded-sm m-auto text-center'>Pending</div></td>
+                    </tr>
+                    <tr>
+                      <td className='font-bold py-2'>Kartik S.</td>
+                      <td>24.06.2025</td>
+                      <td>$124.97</td>
+                      <td className='py-1'><div className='text-[#06A561] bg-[#C4F8E2] rounded-sm m-auto text-center'>Paid</div></td>
+                    </tr>
+                    <tr>
+                      <td className='font-bold py-2'>Rakesh S.</td>
+                      <td>24.06.2025</td>
+                      <td>$124.97</td>
+                      <td className='py-1'><div className='text-[#5A607F] bg-[#E6E9F4] rounded-sm m-auto text-center'>Pending</div></td>
+                    </tr>
+                    <tr>
+                      <td className='font-bold py-2'>Anup S.</td>
+                      <td>24.07.2025</td>
+                      <td>$124.97</td>
+                      <td className='py-1'><div className='text-[#06A561] bg-[#C4F8E2] rounded-sm m-auto text-center'>Paid</div></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </aside>
           <aside>
             <div className='bg-white border border-gray-200 p-5 rounded-xl shadow-sm h-full'>
               <h1 className='font-bold text-[18px] mb-2'>Top Products by Units Sold</h1>
-              <table className='w-full'>
-                <thead className='border-b-2 '>
-                  <tr className='font-semibold text-gray-500 py-1'>
-                    <td>Name</td>
-                    <td>Price</td>
-                    <td>Units</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className='font-bold flex items-center gap-1 py-2'>
-                      <img src={img4} alt="" />
-                      <h1>Men Grey Hoodie</h1>
-                    </td>
-                    <td>$49.90</td>
-                    <td>204</td>
-                  </tr>
-                  <tr>
-                    <td className='font-bold flex items-center gap-1 py-2'>
-                      <img src={img4} alt="" />
-                      <h1>Men Grey Hoodie</h1>
-                    </td>
-                    <td>$49.90</td>
-                    <td>204</td>
-                  </tr>
-                  <tr>
-                    <td className='font-bold flex items-center gap-1 py-2'>
-                      <img src={img4} alt="" />
-                      <h1>Men Grey Hoodie</h1>
-                    </td>
-                    <td>$49.90</td>
-                    <td>204</td>
-                  </tr>
-                  <tr>
-                    <td className='font-bold flex items-center gap-1 py-2'>
-                      <img src={img4} alt="" />
-                      <h1>Men Grey Hoodie</h1>
-                    </td>
-                    <td>$49.90</td>
-                    <td>204</td>
-                  </tr>
-                </tbody>
-              </table>
+              <div className="w-full overflow-x-auto  border-b border-gray-200 ">
+                <table className="w-full text-left border-collapse min-w-[400px]">
+                  <thead className='border-b-2 '>
+                    <tr className='font-semibold text-gray-500 py-1'>
+                      <td>Name</td>
+                      <td>Price</td>
+                      <td>Units</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className='font-bold flex items-center gap-1 py-2'>
+                        <img src={img4} alt="" />
+                        <h1>Men Grey Hoodie</h1>
+                      </td>
+                      <td>$49.90</td>
+                      <td>204</td>
+                    </tr>
+                    <tr>
+                      <td className='font-bold flex items-center gap-1 py-2'>
+                        <img src={img4} alt="" />
+                        <h1>Men Grey Hoodie</h1>
+                      </td>
+                      <td>$49.90</td>
+                      <td>204</td>
+                    </tr>
+                    <tr>
+                      <td className='font-bold flex items-center gap-1 py-2'>
+                        <img src={img4} alt="" />
+                        <h1>Men Grey Hoodie</h1>
+                      </td>
+                      <td>$49.90</td>
+                      <td>204</td>
+                    </tr>
+                    <tr>
+                      <td className='font-bold flex items-center gap-1 py-2'>
+                        <img src={img4} alt="" />
+                        <h1>Men Grey Hoodie</h1>
+                      </td>
+                      <td>$49.90</td>
+                      <td>204</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </aside>
         </div>

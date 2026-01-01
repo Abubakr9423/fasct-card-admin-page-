@@ -72,6 +72,31 @@ export const useBeras = create<LogState>((set) => ({
     },
 }));
 
+interface SubCategory {
+    id: number;
+    subCategoryName: string;
+}
+
+interface CategoryState {
+    isCategoria: SubCategory[];
+    loading: boolean;
+    getCategory: () => Promise<void>;
+}
+
+export const useCategory = create<CategoryState>((set) => ({
+    isCategoria: [],
+    loading: false,
+    getCategory: async () => {
+        set({ loading: true });
+        try {
+            const { data } = await axiosRequest.get("/SubCategory/get-sub-category");
+            set({ isCategoria: data.data, loading: false });
+        } catch (error) {
+            set({ loading: false });
+        }
+    },
+}));
+
 
 export const useProductStore = create<ProductState>((set, get) => ({
     data: null,
