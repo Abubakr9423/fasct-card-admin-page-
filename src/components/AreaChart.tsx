@@ -1,39 +1,45 @@
-
 import Chart from 'react-apexcharts';
 
-
 const AreaChart = () => {
-    // const option = {
-    //     chart: {
-    //         type: 'area',
-    //         height: 350,
-    //         stacked: true,
-    //         toolbar: { show: false }
-    //     },
-    //     colors: ['#008FFB', '#00E396', '#CED4DC'],
-    //     dataLabels: { enabled: false },
-    //     stroke: { curve: 'monotoneCubic' },
-    //     fill: {
-    //         type: 'gradient',
-    //         gradient: {
-    //             opacityFrom: 0.6,
-    //             opacityTo: 0.1,
-    //         }
-    //     },
-    //     legend: { position: 'top', horizontalAlign: 'left' },
-    //     xaxis: {
-    //         type: 'datetime',
-    //         labels: {
-    //             format: 'dd MMM'
-    //         }
-    //     },
-    //     tooltip: {
-    //         x: {
-    //             format: 'dd/MM/yyyy'
-    //         }
-    //     },
-    //     theme: { mode: 'light' }
-    // };
+    const options = {
+        chart: {
+            type: 'area',
+            height: 350,
+            stacked: true,
+            toolbar: { show: false }
+        },
+        colors: ['#2563EB'],
+        dataLabels: { enabled: false },
+        stroke: { 
+            curve: 'smooth',
+            width: 2 
+        },
+        fill: {
+            type: 'gradient',
+            gradient: {
+                shadeIntensity: 1,
+                opacityFrom: 0.5,
+                opacityTo: 0.1,
+                stops: [0, 90, 100]
+            }
+        },
+        xaxis: {
+            type: 'datetime',
+            labels: {
+                style: { colors: '#64748b' },
+                format: 'dd MMM'
+            }
+        },
+        yaxis: {
+            labels: { style: { colors: '#64748b' } }
+        },
+        tooltip: {
+            x: { format: 'dd/MM/yyyy' }
+        },
+        grid: {
+            borderColor: '#f1f5f9',
+        }
+    };
 
     const series = [
         {
@@ -53,9 +59,9 @@ const AreaChart = () => {
     ];
 
     return (
-        <div className="bg-white p-4 rounded-lg shadow-sm w-full">
+        <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm w-full">
             <Chart
-                // options={options}
+                options={options}
                 series={series}
                 type="area"
                 height={350}
