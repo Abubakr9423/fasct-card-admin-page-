@@ -3,13 +3,13 @@ import { NumberTicker } from '@/components/ui/number-ticker';
 import { useProductStore } from '@/store/store';
 import { GetToken } from '@/util/axios';
 import { Eye, Heart } from 'lucide-react';
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer } from "react-toastify";
 
 const Products = () => {
 
-  const { data, fetchProducts, setFilters } = useProductStore((state) => state);
+  const { data, fetchProducts } = useProductStore((state) => state);
   const naviget = useNavigate()
 
 

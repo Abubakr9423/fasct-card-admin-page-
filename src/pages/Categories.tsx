@@ -1,7 +1,8 @@
 import { Input } from '@/components/ui/input'
 import { useCategory } from '@/store/store';
-import { Delete, FileCheckCorner, Pencil, Search, Trash } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
+import {  FileCheckCorner, Pencil, Search, Trash } from 'lucide-react'
+import { useEffect, useState } from 'react'
+
 
 const Categories = () => {
   const { isCategoria, getCategory } = useCategory();
@@ -22,7 +23,7 @@ const Categories = () => {
           <button className='bg-[#2563EB] text-white px-5 py-2 rounded-sm  transition-colors duration-200 hover:bg-[#144fcf]'>Add new</button>
         </div>
         <div className='flex items-center   gap-2  my-3'>
-          <Input type="text" value={search} onChange={(e) => e.target.value} className='w-80' placeholder='Search' />
+          <Input type="text" value={search} onChange={(e) => setSearch(e.target.value)} className='w-80' placeholder='Search' />
           <Search className='relative right-10' />
         </div>
         <section className='grid grid-cols-4 gap-5'>

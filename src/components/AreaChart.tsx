@@ -3,37 +3,37 @@ import Chart from 'react-apexcharts';
 
 
 const AreaChart = () => {
-    const options = {
-        chart: {
-            type: 'area',
-            height: 350,
-            stacked: true,
-            toolbar: { show: false }
-        },
-        colors: ['#008FFB', '#00E396', '#CED4DC'],
-        dataLabels: { enabled: false },
-        stroke: { curve: 'monotoneCubic' },
-        fill: {
-            type: 'gradient',
-            gradient: {
-                opacityFrom: 0.6,
-                opacityTo: 0.1,
-            }
-        },
-        legend: { position: 'top', horizontalAlign: 'left' },
-        xaxis: {
-            type: 'datetime',
-            labels: {
-                format: 'dd MMM'
-            }
-        },
-        tooltip: {
-            x: {
-                format: 'dd/MM/yyyy'
-            }
-        },
-        theme: { mode: 'light' }
-    };
+    // const option = {
+    //     chart: {
+    //         type: 'area',
+    //         height: 350,
+    //         stacked: true,
+    //         toolbar: { show: false }
+    //     },
+    //     colors: ['#008FFB', '#00E396', '#CED4DC'],
+    //     dataLabels: { enabled: false },
+    //     stroke: { curve: 'monotoneCubic' },
+    //     fill: {
+    //         type: 'gradient',
+    //         gradient: {
+    //             opacityFrom: 0.6,
+    //             opacityTo: 0.1,
+    //         }
+    //     },
+    //     legend: { position: 'top', horizontalAlign: 'left' },
+    //     xaxis: {
+    //         type: 'datetime',
+    //         labels: {
+    //             format: 'dd MMM'
+    //         }
+    //     },
+    //     tooltip: {
+    //         x: {
+    //             format: 'dd/MM/yyyy'
+    //         }
+    //     },
+    //     theme: { mode: 'light' }
+    // };
 
     const series = [
         {
@@ -55,7 +55,7 @@ const AreaChart = () => {
     return (
         <div className="bg-white p-4 rounded-lg shadow-sm w-full">
             <Chart
-                options={options}
+                // options={options}
                 series={series}
                 type="area"
                 height={350}
