@@ -1,9 +1,10 @@
 import Chart from 'react-apexcharts';
 
+
 const AreaChart = () => {
     const options = {
         chart: {
-            type: 'area',
+            type: 'area' as const,
             height: 350,
             stacked: true,
             toolbar: { show: false }
