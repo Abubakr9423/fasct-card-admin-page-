@@ -13,14 +13,16 @@ import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
     const token = GetToken();
-    console.log(jwtDecode(token));
-    
-    const decoded: any = jwtDecode(token);
 
-    const rawRoles = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-    const roles = Array.isArray(rawRoles) ? rawRoles : [rawRoles];
-    console.log(roles);
-    
+    let roles: string[] = [];
+    if (typeof token === "string" && token.trim() !== "") {
+        const decoded: any = jwtDecode(token);
+        const rawRoles = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+        roles = Array.isArray(rawRoles) ? rawRoles : rawRoles ? [rawRoles] : [];
+        console.log("Decoded roles:", roles);
+    } else {
+        console.warn("No valid token found");
+    }
 
     const navigate = useNavigate();
     const { theme } = useTheme();
@@ -32,14 +34,29 @@ const Login = () => {
     const { handleSubmit, handleChange, resetForm, values } = useFormik({
         initialValues: { email: "", password: "" },
         onSubmit: async (values) => {
-            const hasAccess = roles.includes("SuperAdmin") || roles.includes("Admin");
+            await loginUser({ userName: values.email, password: values.password });
 
-            if (hasAccess) {
-                await loginUser({ userName: values.email, password: values.password });
-                resetForm();
-                navigate("/orders");
+            const token = GetToken();
+            if (typeof token === "string" && token.trim() !== "") {
+                const decoded: any = jwtDecode(token);
+                const rawRoles =
+                    decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+                const roles = Array.isArray(rawRoles)
+                    ? rawRoles
+                    : rawRoles
+                        ? [rawRoles]
+                        : [];
+
+                const hasAccess = roles.includes("SuperAdmin") || roles.includes("Admin");
+
+                if (hasAccess) {
+                    resetForm();
+                    navigate("/orders");
+                } else {
+                    console.error("Access denied: role not allowed", roles);
+                }
             } else {
-                console.error("Access denied: role not allowed", roles);
+                console.error("No valid token after login");
             }
         },
     });
@@ -75,11 +92,10 @@ const Login = () => {
                                 placeholder='**********'
                             />
                             <div className='flex gap-5'>
-                                {/* ✅ Explicit type="submit" */}
                                 <Button type="submit" disabled={loading}>Log in</Button>
                                 {/* <Link to='/register'>
-                  <Button type="button">Registrate</Button>
-                </Link> */}
+                                    <Button type="button">Registrate</Button>
+                                </Link> */}
                             </div>
                             {error && <p className="text-red-500">{error}</p>}
                         </form>
