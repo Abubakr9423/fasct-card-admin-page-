@@ -72,7 +72,6 @@ export const useBeras = create<LogState>((set) => ({
     },
 }));
 
-<<<<<<< HEAD
 interface SubCategory {
     id: number;
     subCategoryName: string;
@@ -97,7 +96,6 @@ export const useCategory = create<CategoryState>((set) => ({
         }
     },
 }));
-=======
 
 export const useProductStore = create<ProductState>((set, get) => ({
     data: null,
@@ -114,4 +112,3 @@ export const useProductStore = create<ProductState>((set, get) => ({
         }
     },
 }));
->>>>>>> f99cf6a6cf8aeceee195f2de1fc6d179c5faa64c

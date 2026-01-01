@@ -1,4 +1,6 @@
+
 import Chart from 'react-apexcharts';
+
 
 const AreaChart = () => {
     const options = {

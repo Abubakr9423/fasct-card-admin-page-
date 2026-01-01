@@ -47,39 +47,40 @@ const Layout = () => {
 
             <div className='flex flex-1'>
                 {!isLoginPage && (
-                <aside className='bg-[#1C2536] md:w-72  min-h-[calc(100vh-72px)] md:flex hidden flex-col gap-2 p-5 border-r border-gray-700'>
-                    <NavLink
-                        to="/dashboard"
-                        className={({ isActive }) => `${linkStyle} ${isActive ? activeStyle : nonActiveStyle}`}
-                    >
-                        <Home size={20} />
-                        <span>Dashboard</span>
-                    </NavLink>
+                    <aside className='bg-[#1C2536] md:w-72  min-h-[calc(100vh-72px)] md:flex hidden flex-col gap-2 p-5 border-r border-gray-700'>
+                        <NavLink
+                            to="/dashboard"
+                            className={({ isActive }) => `${linkStyle} ${isActive ? activeStyle : nonActiveStyle}`}
+                        >
+                            <Home size={20} />
+                            <span>Dashboard</span>
+                        </NavLink>
 
-                    <NavLink
-                        to="/orders"
-                        className={({ isActive }) => `${linkStyle} ${isActive ? activeStyle : nonActiveStyle}`}
-                    >
-                        <Menu size={20} />
-                        <span>Orders</span>
-                    </NavLink>
+                        <NavLink
+                            to="/orders"
+                            className={({ isActive }) => `${linkStyle} ${isActive ? activeStyle : nonActiveStyle}`}
+                        >
+                            <Menu size={20} />
+                            <span>Orders</span>
+                        </NavLink>
 
-                    <NavLink
-                        to="/products"
-                        className={({ isActive }) => `${linkStyle} ${isActive ? activeStyle : nonActiveStyle}`}
-                    >
-                        <Tag size={20} />
-                        <span>Products</span>
-                    </NavLink>
+                        <NavLink
+                            to="/products"
+                            className={({ isActive }) => `${linkStyle} ${isActive ? activeStyle : nonActiveStyle}`}
+                        >
+                            <Tag size={20} />
+                            <span>Products</span>
+                        </NavLink>
 
-                    <NavLink
-                        to="/categories"
-                        className={({ isActive }) => `${linkStyle} ${isActive ? activeStyle : nonActiveStyle}`}
-                    >
-                        <Folder size={20} />
-                        <span>Other</span>
-                    </NavLink>
-                </aside>
+                        <NavLink
+                            to="/categories"
+                            className={({ isActive }) =>
+                                `${linkStyle} ${isActive ? activeStyle : nonActiveStyle}`}
+                        >
+                            <Folder size={20} />
+                            <span>Other</span>
+                        </NavLink>
+                    </aside>
                 )}
 
                 <main className='flex-1 bg-gray-50 p-6 overflow-y-auto'>
