@@ -1,41 +1,40 @@
-import { useGetBrands } from "@/store/store"
+import { useGetBrands, type Brand } from "@/store/store";
 import { useFormik } from "formik";
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 const Bran = () => {
-
-
-    const { data, getbrands, deletebrands, editbrands, addbrand } = useGetBrands((state) => state)
+    const data = useGetBrands((state) => state.data);
+    const getbrands = useGetBrands((state) => state.getbrands);
+    const deletebrands = useGetBrands((state) => state.deletebrands);
+    const editbrands = useGetBrands((state) => state.editbrands);
+    const addbrand = useGetBrands((state) => state.addbrand);
 
     useEffect(() => {
-        getbrands()
-    }, [])
+        getbrands();
+    }, [getbrands]);
 
-
-    const { handleChange, handleSubmit, resetForm, setFieldValue, values } = useFormik({
+    const { handleChange, handleSubmit, setFieldValue, values } = useFormik({
         initialValues: {
             id: "",
-            brandName: ""
+            brandName: "",
         },
         onSubmit: (values) => {
-            const formdata = new FormData()
-            formdata.append("id", values.id)
-            formdata.append("brandName", values.brandName)
+            const formdata = new FormData();
+            formdata.append("id", values.id);
+            formdata.append("brandName", values.brandName);
 
             if (values.id) {
-                editbrands(formdata)
+                editbrands(formdata);
             } else {
-                addbrand(formdata)
+                addbrand(formdata);
             }
-        }
-    })
+        },
+    });
 
-
-    const handlefield = (e) => {
-        setFieldValue("brandName", e.brandName)
-        setFieldValue("id", e.id)
-    }
-
+    const handlefield = (brand: Brand) => {
+        setFieldValue("brandName", brand.brandName);
+        setFieldValue("id", brand.id);
+    };
 
     return (
         <div className="flex justify-between">
@@ -51,19 +50,25 @@ const Bran = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {data?.map((e) => (
+                    {data?.map((brand: Brand) => (
                         <tr
-                            key={e.id}
+                            key={brand.id}
                             className="hover:bg-blue-50 transition-colors duration-200"
                         >
                             <td className="px-6 py-3 border-t border-gray-200 text-gray-700">
-                                {e.brandName}
+                                {brand.brandName}
                             </td>
                             <td className="px-6 py-3 border-t flex gap-2 border-gray-200">
-                                <button onClick={() => handlefield(e)} className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition-colors duration-200">
+                                <button
+                                    onClick={() => handlefield(brand)}
+                                    className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition-colors duration-200"
+                                >
                                     Edit
                                 </button>
-                                <button onClick={() => deletebrands(e.id)} className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition-colors duration-200">
+                                <button
+                                    onClick={() => deletebrands(brand.id)}
+                                    className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition-colors duration-200"
+                                >
                                     Delete
                                 </button>
                             </td>
@@ -71,8 +76,11 @@ const Bran = () => {
                     ))}
                 </tbody>
             </table>
+
             <div className="border w-[524px] h-[228px] rounded-lg shadow-md p-6 bg-white">
-                <h1 className="text-xl font-semibold text-blue-700 mb-4">Add New Brand</h1>
+                <h1 className="text-xl font-semibold text-blue-700 mb-4">
+                    Add New Brand
+                </h1>
 
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                     <input
@@ -93,7 +101,7 @@ const Bran = () => {
                 </form>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Bran
+export default Bran;

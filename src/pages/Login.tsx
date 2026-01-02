@@ -1,4 +1,3 @@
-import { useTheme } from '@/components/theme-provider';
 import { useBeras } from '@/store/store';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
@@ -24,13 +23,12 @@ const Login = () => {
     }
 
     const navigate = useNavigate();
-    const { theme } = useTheme();
-
     const loginUser = useBeras((state: any) => state.loginUser);
     const loading = useBeras((state: any) => state.loading);
     const error = useBeras((state: any) => state.error);
 
     const [accessError, setAccessError] = useState("");
+
 
     const { handleSubmit, handleChange, resetForm, values } = useFormik({
         initialValues: { email: "", password: "" },

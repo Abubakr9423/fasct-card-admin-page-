@@ -17,7 +17,7 @@ import { Label } from "@/components/ui/label";
 import { useFormik } from "formik";
 
 const Orders = () => {
-  const { data, fetchPrfile, deleteprofile, editProfile, getrole, data1 } = useProfileStore(
+  const { data, fetchPrfile, deleteprofile, getrole, data1 } = useProfileStore(
     (state) => state
   );
 
@@ -27,7 +27,7 @@ const Orders = () => {
   }, []);
 
   console.log(data1);
-  
+
 
   const { handleChange, handleSubmit, setFieldValue, values } = useFormik({
     initialValues: {
@@ -48,20 +48,11 @@ const Orders = () => {
       formdata.append("Dob", values.Dob);
       formdata.append("image", values.image);
       console.log("Submitting:", Object.fromEntries(formdata));
-      editProfile(formdata).then(() => {
-        fetchPrfile();
-      });
     },
   });
 
-  const handleFiled = (profile) => {
-    setFieldValue("FirstName", profile.firstName || "");
-    setFieldValue("LastName", profile.lastName || "");
-    setFieldValue("Email", profile.email || "");
-    setFieldValue("PhoneNumber", profile.phoneNumber || "");
-    setFieldValue("Dob", profile.dob || "");
-    setFieldValue("image", profile.image || "");
-  };
+
+
 
   return (
     <div className="p-6">
@@ -123,7 +114,6 @@ const Orders = () => {
                     <DialogTrigger asChild>
                       <Button
                         className="text-[#1E5EFF]"
-                        onClick={() => handleFiled(e)}
                         variant="outline"
                       >
                         <Pencil />
