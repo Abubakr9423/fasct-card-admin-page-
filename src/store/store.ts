@@ -112,3 +112,27 @@ export const useProductStore = create<ProductState>((set, get) => ({
         }
     },
 }));
+
+
+interface ProductStatedele {
+    products: any[]; // replace `any` with your Product type
+    deleteProduct: (id: number) => Promise<void>;
+}
+
+
+
+export const useDeleteProducts = create<ProductStatedele>((set, get) => ({
+    products: [],
+
+    deleteProduct: async (id: number) => {
+        try {
+            await axiosRequest.delete(`/Product/delete-product?id=${id}`);
+
+            set({
+                products: get().products.filter((p) => p.id !== id),
+            });
+        } catch (error) {
+            console.error("Failed to delete product:", error);
+        }
+    },
+}));

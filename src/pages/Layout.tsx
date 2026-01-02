@@ -1,14 +1,56 @@
-import { NavLink, Outlet, useLocation } from 'react-router-dom'
+import { Navigate, NavLink, Outlet, useLocation } from 'react-router-dom'
 import img from '../assets/Group 1116606595.png'
 import { Folder, Home, Menu, Search, ChevronDown, BellDot, Tag } from 'lucide-react'
+import { GetToken } from '@/util/axios';
+import { jwtDecode } from 'jwt-decode';
+
+
+const linkStyle =
+    "flex w-full items-center rounded-md font-bold gap-3 px-4 py-3 transition-all duration-200";
+const activeStyle = "bg-white text-[#1C2536] shadow-md";
+const nonActiveStyle =
+    "text-gray-400 hover:bg-[#ffffff10] hover:text-white";
 
 const Layout = () => {
-    const linkStyle = "flex w-full items-center rounded-md font-bold gap-3 px-4 py-3 transition-all duration-200";
-    const activeStyle = "bg-white text-[#1C2536] shadow-md";
-    const nonActiveStyle = "text-gray-400 hover:bg-[#ffffff10] hover:text-white";
-
     const location = useLocation();
     const isLoginPage = location.pathname === "/";
+
+    const token = GetToken();
+    let decoded: any = null;
+    let roles: string[] = [];
+    let name: string | undefined;
+    let img1: string | undefined;
+
+    if (typeof token === "string" && token.trim() !== "") {
+        try {
+            decoded = jwtDecode(token);
+            name = decoded?.name;
+            img1 = decoded?.sub;
+
+            const rawRoles =
+                decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+            roles = Array.isArray(rawRoles)
+                ? rawRoles
+                : rawRoles
+                    ? [rawRoles]
+                    : [];
+
+            console.log("Decoded roles:", roles);
+            console.log("Name:", name);
+            console.log("Img1:", img1);
+        } catch (err) {
+            console.error("Invalid token:", err);
+            localStorage.removeItem("token");
+        }
+    } else {
+        console.warn("No valid token found");
+    }
+
+    if (!decoded && !isLoginPage) {
+        return <Navigate to="/" />;
+    }
+
+
 
     return (
         <div className="min-h-screen flex flex-col">
@@ -33,10 +75,10 @@ const Layout = () => {
                                 <BellDot size={20} />
                             </button>
                             <div className="flex items-center gap-3 border-l border-gray-700 pl-5">
-                                <img className='w-10 h-10 rounded-full border-2 border-blue-500' src="https://th.bing.com/th/id/OIP.jixXH_Els1MXBRmKFdMQPAHaHa?w=219&h=219&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3" alt="Avatar" />
+                                <img className='w-10 h-10 rounded-full border-2 border-blue-500' src={img1} alt="Avatar" />
                                 <div className="hidden lg:block">
-                                    <p className="text-sm font-semibold text-white">_nazarov._011</p>
-                                    <p className="text-xs text-gray-400">Admin</p>
+                                    <p className="text-sm font-semibold text-white">{name}</p>
+                                    <p className="text-xs text-gray-400">{roles}</p>
                                 </div>
                                 <ChevronDown size={16} className="text-gray-400 cursor-pointer" />
                             </div>
@@ -94,3 +136,4 @@ const Layout = () => {
 }
 
 export default Layout
+
