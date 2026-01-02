@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { GetToken } from '@/util/axios';
 import { jwtDecode } from "jwt-decode";
+import { useState } from "react";
 
 const Login = () => {
     const token = GetToken();
@@ -30,6 +31,8 @@ const Login = () => {
     const loading = useBeras((state: any) => state.loading);
     const error = useBeras((state: any) => state.error);
 
+    const [accessError, setAccessError] = useState("");
+
     const { handleSubmit, handleChange, resetForm, values } = useFormik({
         initialValues: { email: "", password: "" },
         onSubmit: async (values) => {
@@ -50,12 +53,13 @@ const Login = () => {
 
                 if (hasAccess) {
                     resetForm();
-                    navigate("/orders");
+                    setAccessError(""); 
+                    navigate("/dashboard");
                 } else {
-                    console.error("Access denied: role not allowed", roles);
+                    setAccessError("You don’t have access to this page");
                 }
             } else {
-                console.error("No valid token after login");
+                setAccessError("Password or name is incorrect");
             }
         },
     });
@@ -92,11 +96,9 @@ const Login = () => {
                             />
                             <div className='flex gap-5'>
                                 <Button type="submit" disabled={loading}>Log in</Button>
-                                {/* <Link to='/register'>
-                                    <Button type="button">Registrate</Button>
-                                </Link> */}
                             </div>
                             {error && <p className="text-red-500">{error}</p>}
+                            {accessError && <p className="text-red-500">{accessError}</p>}
                         </form>
                     </CardContent>
                     <CardFooter />
