@@ -172,7 +172,7 @@ const Dashboard = () => {
             <div className='bg-white border border-gray-200 p-5 rounded-xl shadow-sm h-full'>
               <h1 className='font-bold text-[18px] mb-2'>Recent Transactions</h1>
               <div className="w-full overflow-x-auto  border-b border-gray-200 ">
-                <table className="w-full text-left border-collapse min-w-[400px]">
+                <table className="w-full text-left border-collapse min-w-100">
                   <thead className='border-b-2 '>
                     <tr className='font-semibold text-gray-500 py-1'>
                       <td>Name</td>
@@ -221,7 +221,7 @@ const Dashboard = () => {
             <div className='bg-white border border-gray-200 p-5 rounded-xl shadow-sm h-full'>
               <h1 className='font-bold text-[18px] mb-2'>Top Products by Units Sold</h1>
               <div className="w-full overflow-x-auto  border-b border-gray-200 ">
-                <table className="w-full text-left border-collapse min-w-[400px]">
+                <table className="w-full text-left border-collapse min-w-100">
                   <thead className='border-b-2 '>
                     <tr className='font-semibold text-gray-500 py-1'>
                       <td>Name</td>

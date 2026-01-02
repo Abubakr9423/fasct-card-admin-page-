@@ -1,7 +1,6 @@
 import { axiosRequest, SaveToken } from '@/util/axios';
 import { create } from 'zustand';
 
-
 interface LogState {
     user: any | null;
     token: string | null;
@@ -24,6 +23,7 @@ export interface Product {
     categoryName: string;
     productInfoFromCart: any;
 }
+
 interface ProductsData {
     products: Product[];
 }
@@ -47,6 +47,21 @@ interface ProductState {
     fetchProducts: () => Promise<void>;
 }
 
+interface Category {
+    id: number;
+    categoryName: string;
+    categoryImage: string;
+    subCategories: any[];
+}
+
+interface CategoryState {
+    isCategoria: Category[];
+    loading: boolean;
+    getCategory: () => Promise<void>;
+    addCategory: (formdata: FormData) => Promise<void>;
+    deleteCategory: (id: number) => Promise<void>;
+    editCategory: (formdata: FormData) => Promise<void>;
+}
 
 export const useBeras = create<LogState>((set) => ({
     user: null,
@@ -72,29 +87,46 @@ export const useBeras = create<LogState>((set) => ({
     },
 }));
 
-interface SubCategory {
-    id: number;
-    subCategoryName: string;
-}
-
-interface CategoryState {
-    isCategoria: SubCategory[];
-    loading: boolean;
-    getCategory: () => Promise<void>;
-}
-
-export const useCategory = create<CategoryState>((set) => ({
+export const useCategory = create<CategoryState>((set, get) => ({
     isCategoria: [],
     loading: false,
+
     getCategory: async () => {
         set({ loading: true });
         try {
-            const { data } = await axiosRequest.get("/SubCategory/get-sub-category");
+            const { data } = await axiosRequest.get("/Category/get-categories");
             set({ isCategoria: data.data, loading: false });
         } catch (error) {
             set({ loading: false });
         }
     },
+
+    deleteCategory: async (id: number) => {
+        try {
+            await axiosRequest.delete(`Category/delete-category?id=${id}`);
+            get().getCategory();
+        } catch (error) {
+            console.error("Error deleting:", error);
+        }
+    },
+
+    addCategory: async (formdata: FormData) => {
+        try {
+            await axiosRequest.post("Category/add-category", formdata);
+            get().getCategory();
+        } catch (error) {
+            console.error("Error adding:", error);
+        }
+    },
+
+    editCategory: async (formdata: FormData) => {
+        try {
+            await axiosRequest.put("Category/update-category", formdata);
+            get().getCategory();
+        } catch (error) {
+            console.error("Error updating:", error);
+        }
+    }
 }));
 
 export const useProductStore = create<ProductState>((set, get) => ({
