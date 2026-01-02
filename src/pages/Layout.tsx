@@ -115,7 +115,7 @@ const Layout = () => {
                         </NavLink>
 
                         <NavLink
-                            to="/categories"
+                            to="/other"
                             className={({ isActive }) =>
                                 `${linkStyle} ${isActive ? activeStyle : nonActiveStyle}`}
                         >
@@ -125,8 +125,8 @@ const Layout = () => {
                     </aside>
                 )}
 
-                <main className='flex-1 bg-gray-50 p-6 overflow-y-auto'>
-                    <div className="max-w-[1200px] mx-auto">
+                <main className='flex-1 bg-gray-50  overflow-y-auto'>
+                    <div className="">
                         <Outlet />
                     </div>
                 </main>

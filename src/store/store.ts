@@ -172,6 +172,49 @@ export const useDeleteProducts = create<ProductStatedele>((set, get) => ({
 
 
 
+export const useGetBrands = create((set, get) => ({
+    data: null,
+
+    getbrands: async () => {
+        try {
+            const response = await axiosRequest.get('/Brand/get-brands')
+            set({ data: response.data.data });
+        } catch (error) {
+            console.error("Failed to delete product:", error);
+        }
+    },
+    deletebrands: async (id: Number) => {
+        try {
+            await axiosRequest.delete(`/Brand/delete-brand?id=${id}`)
+            await get().getbrands();
+        } catch (error) {
+            console.error(error);
+
+        }
+    },
+    editbrands: async (obj: FormData) => {
+        try {
+            await axiosRequest.put(`/Brand/update-brand`, obj)
+            await get().getbrands()
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    addbrand: async (obj: FormData) => {
+        try {
+            await axiosRequest.post(`/Brand/add-brand`, obj)
+            await get().getbrands()
+        } catch (error) {
+            console.error(error)
+        }
+    },
+
+}));
+
+
+
+
+
 
 
 export const useProfileStore = create((set, get) => ({
@@ -196,10 +239,18 @@ export const useProfileStore = create((set, get) => ({
             console.error("Failed to delete profile:", error);
         }
     },
-    editProfile: async (edited: object) => {
+    addrole: async (id: Number) => {
         try {
-            await axiosRequest.put(`/UserProfile/update-user-profile`, edited)
-            await get().fetchPrfile();
+            await axiosRequest.post(`/UserProfile/addrole-from-user?UserId=efw&RoleId=efw`)
+        } catch (error) {
+            console.error(error);
+
+        }
+    },
+    getrole: async () => {
+        try {
+            const response = await axiosRequest.get(`https://store-api.softclub.tj/UserProfile/get-user-roles`);
+            set({ data1: response.data.data });
         } catch (error) {
             console.error(error);
 

@@ -26,7 +26,7 @@ const Products = () => {
 
 
   return (
-    <>
+    <div className='p-6'>
       <div className='flex justify-between p-10 items-center'>
         <TextAnimate animation="slideLeft" by="character" className='text-4xl font-[700]'>
           Product Page
@@ -124,7 +124,7 @@ const Products = () => {
           )}
         </tbody>
       </table>
-    </>
+    </div>
   )
 }
 

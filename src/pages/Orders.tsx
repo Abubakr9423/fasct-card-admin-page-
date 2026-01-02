@@ -17,13 +17,17 @@ import { Label } from "@/components/ui/label";
 import { useFormik } from "formik";
 
 const Orders = () => {
-  const { data, fetchPrfile, deleteprofile, editProfile } = useProfileStore(
+  const { data, fetchPrfile, deleteprofile, editProfile, getrole, data1 } = useProfileStore(
     (state) => state
   );
 
   useEffect(() => {
     fetchPrfile();
+    getrole()
   }, []);
+
+  console.log(data1);
+  
 
   const { handleChange, handleSubmit, setFieldValue, values } = useFormik({
     initialValues: {
@@ -35,6 +39,7 @@ const Orders = () => {
       Dob: "",
     },
     onSubmit: (values) => {
+      console.log(values);
       const formdata = new FormData();
       formdata.append("FirstName", values.FirstName);
       formdata.append("LastName", values.LastName);
@@ -59,7 +64,7 @@ const Orders = () => {
   };
 
   return (
-    <>
+    <div className="p-6">
       <table className="w-full border-collapse shadow-lg rounded-lg overflow-hidden">
         <thead className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white">
           <tr>
@@ -115,24 +120,25 @@ const Orders = () => {
                   </Button>
 
                   <Dialog>
-                    <form onSubmit={handleSubmit}>
-                      <DialogTrigger asChild>
-                        <Button
-                          className="text-[#1E5EFF]"
-                          onClick={() => handleFiled(e)}
-                          variant="outline"
-                        >
-                          <Pencil />
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-[425px]">
+                    <DialogTrigger asChild>
+                      <Button
+                        className="text-[#1E5EFF]"
+                        onClick={() => handleFiled(e)}
+                        variant="outline"
+                      >
+                        <Pencil />
+                      </Button>
+                    </DialogTrigger>
+
+                    <DialogContent className="sm:max-w-[425px]">
+                      <form onSubmit={handleSubmit}>
                         <DialogHeader>
                           <DialogTitle>Edit profile</DialogTitle>
                           <DialogDescription>
-                            Make changes to your profile here. Click save when
-                            you&apos;re done.
+                            Make changes to your profile here. Click save when you&apos;re done.
                           </DialogDescription>
                         </DialogHeader>
+
                         <div className="grid gap-4">
                           <div className="grid gap-3">
                             <Label htmlFor="firstName">First Name</Label>
@@ -143,6 +149,7 @@ const Orders = () => {
                               onChange={handleChange}
                             />
                           </div>
+
                           <div className="grid gap-3">
                             <Label htmlFor="lastName">Last Name</Label>
                             <Input
@@ -152,6 +159,7 @@ const Orders = () => {
                               onChange={handleChange}
                             />
                           </div>
+
                           <div className="grid gap-3">
                             <Label htmlFor="email">Email</Label>
                             <Input
@@ -161,6 +169,7 @@ const Orders = () => {
                               onChange={handleChange}
                             />
                           </div>
+
                           <div className="grid gap-3">
                             <Label htmlFor="phone">Phone Number</Label>
                             <Input
@@ -170,6 +179,7 @@ const Orders = () => {
                               onChange={handleChange}
                             />
                           </div>
+
                           <div className="grid gap-3">
                             <Label htmlFor="dob">Date of Birth</Label>
                             <Input
@@ -179,6 +189,7 @@ const Orders = () => {
                               onChange={handleChange}
                             />
                           </div>
+
                           <div className="grid gap-3">
                             <Label htmlFor="image">Profile Image</Label>
                             <Input
@@ -187,20 +198,21 @@ const Orders = () => {
                               type="file"
                               accept="image/*"
                               onChange={(event) => {
-                                const file = event.currentTarget.files[0];
+                                const file = event.currentTarget.files?.[0];
                                 setFieldValue("image", file);
                               }}
                             />
                           </div>
                         </div>
+
                         <DialogFooter>
                           <DialogClose asChild>
                             <Button variant="outline">Cancel</Button>
                           </DialogClose>
                           <Button type="submit">Save changes</Button>
                         </DialogFooter>
-                      </DialogContent>
-                    </form>
+                      </form>
+                    </DialogContent>
                   </Dialog>
                 </div>
               </td>
@@ -208,7 +220,7 @@ const Orders = () => {
           ))}
         </tbody>
       </table>
-    </>
+    </div>
   );
 };
 
