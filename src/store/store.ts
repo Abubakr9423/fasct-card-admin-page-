@@ -63,6 +63,7 @@ interface CategoryState {
     editCategory: (formdata: FormData) => Promise<void>;
 }
 
+
 export const useBeras = create<LogState>((set) => ({
     user: null,
     token: null,
@@ -172,43 +173,54 @@ export const useDeleteProducts = create<ProductStatedele>((set, get) => ({
 
 
 
-export const useGetBrands = create((set, get) => ({
-    data: null,
 
+export interface Brand {
+    id: string;
+    brandName: string;
+}
+
+export interface BrandState {
+    data: Brand[];
+    getbrands: () => Promise<void>;
+    deletebrands: (id: string) => Promise<void>;
+    editbrands: (obj: FormData) => Promise<void>;
+    addbrand: (obj: FormData) => Promise<void>;
+}
+
+export const useGetBrands = create<BrandState>((set, get) => ({
+    data: [],
     getbrands: async () => {
         try {
-            const response = await axiosRequest.get('/Brand/get-brands')
+            const response = await axiosRequest.get("/Brand/get-brands");
             set({ data: response.data.data });
         } catch (error) {
-            console.error("Failed to delete product:", error);
+            console.error("Failed to fetch brands:", error);
         }
     },
-    deletebrands: async (id: Number) => {
+    deletebrands: async (id: string) => {
         try {
-            await axiosRequest.delete(`/Brand/delete-brand?id=${id}`)
+            await axiosRequest.delete(`/Brand/delete-brand?id=${id}`);
             await get().getbrands();
         } catch (error) {
-            console.error(error);
-
+            console.error("Failed to delete brand:", error);
         }
     },
     editbrands: async (obj: FormData) => {
         try {
-            await axiosRequest.put(`/Brand/update-brand`, obj)
-            await get().getbrands()
+            await axiosRequest.put(`/Brand/update-brand`, obj);
+            await get().getbrands();
         } catch (error) {
-            console.error(error)
+            console.error("Failed to edit brand:", error);
         }
     },
     addbrand: async (obj: FormData) => {
         try {
-            await axiosRequest.post(`/Brand/add-brand`, obj)
-            await get().getbrands()
+            await axiosRequest.post(`/Brand/add-brand`, obj);
+            await get().getbrands();
         } catch (error) {
-            console.error(error)
+            console.error("Failed to add brand:", error);
         }
     },
-
 }));
 
 
@@ -217,8 +229,33 @@ export const useGetBrands = create((set, get) => ({
 
 
 
-export const useProfileStore = create((set, get) => ({
+export interface UserRole {
+    id: string;
+    name: string;
+}
+
+export interface Profile {
+    userId: number;
+    userName: string;
+    image?: string;
+    email?: string;
+    phoneNumber?: string;
+    userRoles: UserRole[];
+}
+
+interface ProfileState {
+    data: Profile[] | null;
+    data1: UserRole[] | null;
+    fetchPrfile: () => Promise<void>;
+    deleteprofile: (id: number) => Promise<void>;
+    editProfile: (obj: FormData) => Promise<void>;
+    addrole: (id: number) => Promise<void>;
+    getrole: () => Promise<void>;
+}
+
+export const useProfileStore = create<ProfileState>((set, get) => ({
     data: null,
+    data1: null,
 
     fetchPrfile: async () => {
         try {
@@ -239,21 +276,34 @@ export const useProfileStore = create((set, get) => ({
             console.error("Failed to delete profile:", error);
         }
     },
-    addrole: async (id: Number) => {
-        try {
-            await axiosRequest.post(`/UserProfile/addrole-from-user?UserId=efw&RoleId=efw`)
-        } catch (error) {
-            console.error(error);
 
+    editProfile: async (obj: FormData) => {
+        try {
+            await axiosRequest.put(`/UserProfile/update-user`, obj);
+            await get().fetchPrfile();
+        } catch (error) {
+            console.error("Failed to edit profile:", error);
         }
     },
+
+    addrole: async (id: number) => {
+        try {
+            await axiosRequest.post(
+                `/UserProfile/addrole-from-user?UserId=${id}&RoleId=efw`
+            );
+        } catch (error) {
+            console.error("Failed to add role:", error);
+        }
+    },
+
     getrole: async () => {
         try {
-            const response = await axiosRequest.get(`https://store-api.softclub.tj/UserProfile/get-user-roles`);
+            const response = await axiosRequest.get(
+                "https://store-api.softclub.tj/UserProfile/get-user-roles"
+            );
             set({ data1: response.data.data });
         } catch (error) {
-            console.error(error);
-
+            console.error("Failed to fetch roles:", error);
         }
-    }
+    },
 }));
