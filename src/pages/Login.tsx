@@ -1,14 +1,13 @@
-import { useTheme } from '@/components/theme-provider';
 import { useBeras } from '@/store/store';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { MagicCard } from '@/components/ui/magic-card';
-import { MorphingText } from '@/components/ui/morphing-text';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import { GetToken } from '@/util/axios';
 import { jwtDecode } from "jwt-decode";
+import { useState } from "react";
+import Img from '../assets/Group 1116606595.png';
 
 const Login = () => {
     const token = GetToken();
@@ -24,11 +23,12 @@ const Login = () => {
     }
 
     const navigate = useNavigate();
-    const { theme } = useTheme();
-
     const loginUser = useBeras((state: any) => state.loginUser);
     const loading = useBeras((state: any) => state.loading);
     const error = useBeras((state: any) => state.error);
+
+    const [accessError, setAccessError] = useState("");
+
 
     const { handleSubmit, handleChange, resetForm, values } = useFormik({
         initialValues: { email: "", password: "" },
@@ -50,59 +50,67 @@ const Login = () => {
 
                 if (hasAccess) {
                     resetForm();
-                    navigate("/orders");
+                    setAccessError("");
+                    navigate("/dashboard");
                 } else {
-                    console.error("Access denied: role not allowed", roles);
+                    setAccessError("You don’t have access to this page");
                 }
             } else {
-                console.error("No valid token after login");
+                setAccessError("Password or name is incorrect");
             }
         },
     });
 
     return (
-        <div>
-            <Card className='m-auto flex items-center p-30'>
-                <MagicCard
-                    gradientColor={theme === "dark" ? "#262626" : "#D9D9D955"}
-                    className="p-0 w-[350px] md:w-[1000px] h-[600px] md:h-[500px] flex flex-col justify-evenly"
+        <main className="flex justify-between text-white h-screen">
+            {/* Left side */}
+            <aside className="bg-[#1D2739] w-[50%] flex items-center justify-start p-10">
+                <div>
+                    <p className="text-[18px]">Welcome to admin panel</p>
+                    <img className="w-80" src={Img} alt="Admin illustration" />
+                </div>
+            </aside>
+
+            {/* Right side */}
+            <aside className="flex items-center justify-center w-[50%] text-black p-10">
+                <form
+                    onSubmit={handleSubmit}
+                    className="flex flex-col w-80 gap-2.5"
                 >
-                    <CardHeader>
-                        <CardTitle>
-                            <MorphingText className='font-serif-[Inter]' texts={["Welcome", "Please Log in"]} />
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-4">
-                        <form onSubmit={handleSubmit} className='flex flex-col gap-5 items-center'>
-                            <Input
-                                name='email'
-                                onChange={handleChange}
-                                value={values.email}
-                                className='md:w-[420px] mt-10 md:mt-0 border-gray-600'
-                                type="text"
-                                placeholder='rimel1111@gmail.com'
-                            />
-                            <Input
-                                name='password'
-                                onChange={handleChange}
-                                value={values.password}
-                                className='md:w-[420px] border-gray-600'
-                                type="password"
-                                placeholder='**********'
-                            />
-                            <div className='flex gap-5'>
-                                <Button type="submit" disabled={loading}>Log in</Button>
-                                {/* <Link to='/register'>
-                                    <Button type="button">Registrate</Button>
-                                </Link> */}
-                            </div>
-                            {error && <p className="text-red-500">{error}</p>}
-                        </form>
-                    </CardContent>
-                    <CardFooter />
-                </MagicCard>
-            </Card>
-        </div>
+                    <h1 className="font-bold text-2xl">Log in</h1>
+                    <Input
+                        name="email"
+                        onChange={handleChange}
+                        value={values.email}
+                        className="rounded-[3px]"
+                        placeholder="Username"
+                        type="text"
+                    />
+                    <Input
+                        name="password"
+                        onChange={handleChange}
+                        value={values.password}
+                        className="rounded-[3px]"
+                        placeholder="Password"
+                        type="password"
+                    />
+                    <Label className="text-center m-auto text-blue-700 cursor-pointer">
+                        Forgot password?
+                    </Label>
+                    <Button
+                        type="submit"
+                        disabled={loading}
+                        className="bg-[#2563EB] hover:bg-blue-700 transition-all rounded-[4px] py-2.5 px-5 text-white font-semibold cursor-pointer w-full"
+                    >
+                        Log in
+                    </Button>
+
+                    {/* Error messages */}
+                    {error && <p className="text-red-500">{error}</p>}
+                    {accessError && <p className="text-red-500">{accessError}</p>}
+                </form>
+            </aside>
+        </main>
     );
 };
 

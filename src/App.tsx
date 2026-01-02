@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { lazy, Suspense } from "react";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Layout = lazy(() => import("./pages/Layout"));
 const Login = lazy(() => import("./pages/Login"));
@@ -9,29 +10,42 @@ const Products = lazy(() => import("./pages/Products"));
 const Brand = lazy(() => import("./pages/Brand"));
 const Categories = lazy(() => import("./pages/Categories"));
 const Other = lazy(() => import("./pages/Other"));
+const AddProduct = lazy(() => import("./pages/AddProduct"));
+const Bran = lazy(() => import("./pages/Bran")); // check if typo
 
-const App = () => {
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: (
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout />
-        </Suspense>
-      ),
-      children: [
-        { index: true, element: <Suspense fallback={<div>Loading...</div>}><Login /></Suspense> },
-        { path:"/dashboard", element: <Suspense fallback={<div>Loading...</div>}><Dashboard /></Suspense> },
-        { path:"/orders", element: <Suspense fallback={<div>Loading...</div>}><Orders /></Suspense> },
-        { path:"/products", element: <Suspense fallback={<div>Loading...</div>}><Products /></Suspense> },
-        { path:"/categories", element: <Suspense fallback={<div>Loading...</div>}><Categories /></Suspense> },
-        { path:"/brand", element: <Suspense fallback={<div>Loading...</div>}><Brand /></Suspense> },
-        { path:"/other", element: <Suspense fallback={<div>Loading...</div>}><Other /></Suspense> },
-      ]
-    }
-  ]);
+const Loader = () => (
+  <div className="flex justify-center items-center h-screen">
+    <CircularProgress size={80} />
+  </div>
+);
 
-  return <RouterProvider router={router} />;
-};
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      { index: true, element: <Login /> },
+      { path: "dashboard", element: <Dashboard /> },
+      { path: "orders", element: <Orders /> },
+      { path: "products", element: <Products /> },
+      { path: "brand", element: <Brand /> },
+      {
+        path: "other",
+        element: <Other />,
+        children: [
+          { index: true, element: <Categories /> },
+          { path: "brands", element: <Bran /> },
+        ],
+      },
+      { path: "addproducts", element: <AddProduct /> },
+    ],
+  },
+]);
+
+const App = () => (
+  <Suspense fallback={<Loader />}>
+    <RouterProvider router={router} />
+  </Suspense>
+);
 
 export default App;
