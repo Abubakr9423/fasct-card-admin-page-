@@ -4,7 +4,7 @@ import img5 from '../assets/div.MuiBox-root (2).png'
 
 const AddProduct = () => {
   return (
-    <main className="px-5">
+    <main className="p-5">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Products / Add new</h1>
         <div className="flex gap-1">
@@ -23,13 +23,13 @@ const AddProduct = () => {
             <div className="flex gap-20  px-2 py-2 items-center">
               <p>Normal</p>
               <div className="flex gap-5">
-                <ArrowBigUp />
-                <PenTool />
-                <Redo />
-                <Link2 />
-                <Menu />
-                <ChartBarIncreasing />
-                <RemoveFormatting />
+                <ArrowBigUp className="cursor-pointer" />
+                <PenTool className="cursor-pointer" />
+                <Redo className="cursor-pointer" />
+                <Link2 className="cursor-pointer" />
+                <Menu className="cursor-pointer" />
+                <ChartBarIncreasing className="cursor-pointer" />
+                <RemoveFormatting className="cursor-pointer" />
               </div>
             </div>
             <input className="border w-full pt-2 pb-30 pl-3" placeholder="Description" type="text" />
@@ -66,17 +66,17 @@ const AddProduct = () => {
             <div className="grid grid-cols-2 gap-2">
               <input className="border w-full rounded-sm py-2 px-3 font-semibold" type="text" placeholder="Size" />
               <div className="border w-full rounded-sm py-2 px-3 font-semibold flex justify-between" >
-                <button className="bg-[#E6E9F4] px-3 py-1 rounded-sm text-[#7E84A3] flex gap-3"><span>S</span> <span>✕</span></button>
-                <button className="bg-[#E6E9F4] px-3 py-1 rounded-sm text-[#7E84A3] flex gap-3"><span>M</span> <span>✕</span></button>
-                <button className="bg-[#E6E9F4] px-3 py-1 rounded-sm text-[#7E84A3] flex gap-3"><span>L</span> <span>✕</span></button>
-                <button className="bg-[#E6E9F4] px-3 py-1 rounded-sm text-[#7E84A3] flex gap-3"><span>XL</span> <span>✕</span></button>
+                <button className="bg-[#E6E9F4] px-3 py-1 rounded-sm text-[#7E84A3] flex gap-3  cursor-pointer"><span>S</span> <span>✕</span></button>
+                <button className="bg-[#E6E9F4] px-3 py-1 rounded-sm text-[#7E84A3] flex gap-3  cursor-pointer"><span>M</span> <span>✕</span></button>
+                <button className="bg-[#E6E9F4] px-3 py-1 rounded-sm text-[#7E84A3] flex gap-3 cursor-pointer"><span>L</span> <span>✕</span></button>
+                <button className="bg-[#E6E9F4] px-3 py-1 rounded-sm text-[#7E84A3] flex gap-3 cursor-pointer"><span>XL</span> <span>✕</span></button>
               </div>
               <input className="border w-full rounded-sm py-2 px-3 font-semibold" type="text" placeholder="Size" />
               <div className="border w-full rounded-sm py-2 px-3 font-semibold flex justify-between" >
-                <button className="bg-[#E6E9F4] px-3 py-1 rounded-sm text-[#7E84A3] flex gap-3"><span>10</span> <span>✕</span></button>
-                <button className="bg-[#E6E9F4] px-3 py-1 rounded-sm text-[#7E84A3] flex gap-3"><span>20</span> <span>✕</span></button>
-                <button className="bg-[#E6E9F4] px-3 py-1 rounded-sm text-[#7E84A3] flex gap-3"><span>30</span> <span>✕</span></button>
-                <button className="bg-[#E6E9F4] px-3 py-1 rounded-sm text-[#7E84A3] flex gap-3"><span>40</span> <span>✕</span></button>
+                <button className="bg-[#E6E9F4] px-3 py-1 rounded-sm text-[#7E84A3] flex gap-3 cursor-pointer"><span>10</span> <span>✕</span></button>
+                <button className="bg-[#E6E9F4] px-3 py-1 rounded-sm text-[#7E84A3] flex gap-3 cursor-pointer"><span>20</span> <span>✕</span></button>
+                <button className="bg-[#E6E9F4] px-3 py-1 rounded-sm text-[#7E84A3] flex gap-3 cursor-pointer"><span>30</span> <span>✕</span></button>
+                <button className="bg-[#E6E9F4] px-3 py-1 rounded-sm text-[#7E84A3] flex gap-3 cursor-pointer"><span>40</span> <span>✕</span></button>
               </div>
               <input className="border w-full rounded-sm py-2 px-3 font-semibold" type="text" placeholder="Option 2" />
               <input className="border w-full rounded-sm py-2 px-3 font-semibold" type="text" placeholder="Value" />
@@ -91,7 +91,7 @@ const AddProduct = () => {
               <h1 className="font-semibold text-[#2563EB]">✓ Create new</h1>
             </div>
             <div className="flex justify-between my-2">
-              <div className="bg-black rounded-full w-8 h-8"></div>
+              <div className="bg-black rounded-full w-8 h-8 focus:border-blue-600 focus:border-3 "></div>
               <div className="bg-[#E07575] rounded-full w-8 h-8"></div>
               <div className="bg-[#6366F1] rounded-full w-8 h-8"></div>
               <div className="bg-[#FFB71A] rounded-full w-8 h-8"></div>
@@ -108,9 +108,9 @@ const AddProduct = () => {
               <button className="border-[#2563EB] border px-3 py-1 rounded-sm text-[#2563EB]">✓</button>
             </div>
             <div className="my-3 flex gap-2 flex-wrap">
-              <span className="bg-[#E6E9F4] text-[#5A607F] p-2 rounded-sm">T-Shirt ✕</span>
-              <span className="bg-[#E6E9F4] text-[#5A607F] p-2 rounded-sm">Summer Collection ✕</span>
-              <span className="bg-[#E6E9F4] text-[#5A607F] p-2 rounded-sm">Men Clothes ✕</span>
+              <span className="bg-[#E6E9F4] text-[#5A607F] p-2 rounded-sm cursor-pointer">T-Shirt ✕</span>
+              <span className="bg-[#E6E9F4] text-[#5A607F] p-2 rounded-sm cursor-pointer">Summer Collection ✕</span>
+              <span className="bg-[#E6E9F4] text-[#5A607F] p-2 rounded-sm cursor-pointer">Men Clothes ✕</span>
             </div>
           </div>
           <div className="rounded-sm  border p-3 my-2">
