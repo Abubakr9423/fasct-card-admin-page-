@@ -81,11 +81,13 @@ export const useBeras = create<LogState>((set) => ({
                 loading: false,
                 error: null,
             });
+            return true; // ✅ success
         } catch (err: any) {
             let message = err.response?.data?.message || err.message || "Unexpected error";
             set({ loading: false, error: message });
+            return false; // ❌ failure
         }
-    },
+    }
 }));
 
 export const useCategory = create<CategoryState>((set, get) => ({
