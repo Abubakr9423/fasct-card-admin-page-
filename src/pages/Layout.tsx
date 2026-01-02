@@ -75,7 +75,7 @@ const Layout = () => {
                                 <BellDot size={20} />
                             </button>
                             <div className="flex items-center gap-3 border-l border-gray-700 pl-5">
-                                <img className='w-10 h-10 rounded-full border-2 border-blue-500' src={img1} alt="Avatar" />
+                                <img className='w-10 h-10 rounded-full border-2 border-blue-500' src={`https://store-api.softclub.tj/images/${img1}`} alt="Avatar" />
                                 <div className="hidden lg:block">
                                     <p className="text-sm font-semibold text-white">{name}</p>
                                     <p className="text-xs text-gray-400">{roles}</p>

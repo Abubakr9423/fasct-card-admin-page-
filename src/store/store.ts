@@ -147,7 +147,7 @@ export const useProductStore = create<ProductState>((set, get) => ({
 
 
 interface ProductStatedele {
-    products: any[]; // replace `any` with your Product type
+    products: any[];
     deleteProduct: (id: number) => Promise<void>;
 }
 
@@ -167,4 +167,42 @@ export const useDeleteProducts = create<ProductStatedele>((set, get) => ({
             console.error("Failed to delete product:", error);
         }
     },
+}));
+
+
+
+
+
+
+export const useProfileStore = create((set, get) => ({
+    data: null,
+
+    fetchPrfile: async () => {
+        try {
+            const response = await axiosRequest.get(
+                "https://store-api.softclub.tj/UserProfile/get-user-profiles"
+            );
+            set({ data: response.data.data });
+        } catch (error) {
+            console.error("Failed to fetch profiles:", error);
+        }
+    },
+
+    deleteprofile: async (id: number) => {
+        try {
+            await axiosRequest.delete(`/UserProfile/delete-user?id=${id}`);
+            await get().fetchPrfile();
+        } catch (error) {
+            console.error("Failed to delete profile:", error);
+        }
+    },
+    editProfile: async (edited: object) => {
+        try {
+            await axiosRequest.put(`/UserProfile/update-user-profile`, edited)
+            await get().fetchPrfile();
+        } catch (error) {
+            console.error(error);
+
+        }
+    }
 }));
