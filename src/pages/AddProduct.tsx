@@ -1,215 +1,312 @@
+import { useEffect, useState } from "react"
+import { useFormik } from "formik"
 import { Input } from "@/components/ui/input"
-import { ArrowBigUp, ChartBarIncreasing, Link2, Menu, PenTool, Redo, RemoveFormatting, Trash, Upload } from "lucide-react"
-import img5 from '../assets/div.MuiBox-root (2).png'
+import {
+  ArrowBigUp,
+  ChartBarIncreasing,
+  Link2,
+  Menu,
+  PenTool,
+  Redo,
+  RemoveFormatting,
+  Trash,
+  Upload,
+} from "lucide-react"
+import { useAddProductStore } from "@/store/addProductStore"
 
-const AddProduct = () => {
+interface AddProductProps {
+  productId?: number // optional, for edit mode
+}
+
+const AddProduct = ({ productId }: AddProductProps) => {
+  const {
+    fetchAttributes,
+    submitProduct,
+    handleImageUpload,
+    removeImage,
+    images,
+    colors,
+    brands,
+    subCategories,
+    loading,
+    setField,
+    fetchProductById,
+    createColor,
+  } = useAddProductStore()
+
+  const [newColor, setNewColor] = useState("")
+
+  // Fetch brands, categories, colors
+  useEffect(() => {
+    fetchAttributes()
+    if (productId) fetchProductById(productId)
+  }, [fetchAttributes, productId, fetchProductById])
+
+  const formik = useFormik({
+    initialValues: {
+      productName: "",
+      description: "",
+      code: "",
+      price: 0,
+      discountPrice: 0,
+      quantity: 0,
+      brandId: "",
+      subCategoryId: "",
+      colorId: null as number | null,
+      weight: "",
+      size: "",
+    },
+    enableReinitialize: true, // important to pre-fill when editing
+    onSubmit: async (values) => {
+      Object.entries(values).forEach(([key, value]) => {
+        setField(key as any, value)
+      })
+      await submitProduct(productId)
+      formik.resetForm()
+    },
+  })
+
   return (
-    <main className="px-5">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Products / Add new</h1>
-        <div className="flex gap-1">
-          <button className="px-6 py-2 bg-white border-[#2563EB] border text-[#2563EB] rounded-sm">Cancel</button>
-          <button className="px-6 py-2 bg-[#2563EB] border text-white rounded-sm">Save</button>
+    <form onSubmit={formik.handleSubmit}>
+      <main className="px-5">
+        {/* HEADER */}
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-2xl font-bold">
+            Products / {productId ? "Edit" : "Add new"}
+          </h1>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={formik.resetForm}
+              className="px-6 py-2 border border-[#2563EB] text-[#2563EB] rounded-md"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-6 py-2 bg-[#2563EB] text-white rounded-md"
+            >
+              {productId ? "Update" : "Save"}
+            </button>
+          </div>
         </div>
-      </div>
-      <section className="flex items-start gap-3 my-3">
-        <aside className="w-[60%] ">
-          <h1 className="text-2xl font-semibold">Information</h1>
-          <div className="flex items-center  gap-1">
-            <Input className="w-200" placeholder="Product name" type="text" />
-            <Input className="w-60" placeholder="Code" type="text" />
-          </div>
-          <div className="border my-2 rounded-sm font-semibold">
-            <div className="flex gap-20  px-2 py-2 items-center">
-              <p>Normal</p>
-              <div className="flex gap-5">
-                <ArrowBigUp />
-                <PenTool />
-                <Redo />
-                <Link2 />
-                <Menu />
-                <ChartBarIncreasing />
-                <RemoveFormatting />
+
+        <section className="flex gap-4">
+          {/* LEFT SIDE */}
+          <aside className="w-[60%] space-y-4">
+            <h2 className="text-xl font-semibold">Information</h2>
+
+            <div className="flex gap-2">
+              <Input
+                name="productName"
+                value={formik.values.productName}
+                onChange={formik.handleChange}
+                placeholder="Product name"
+              />
+              <Input
+                name="code"
+                value={formik.values.code}
+                onChange={formik.handleChange}
+                placeholder="Code"
+              />
+            </div>
+
+            {/* DESCRIPTION */}
+            <div className="border rounded-md">
+              <div className="flex items-center gap-5 px-3 py-2 border-b">
+                <span className="font-medium">Normal</span>
+                <ArrowBigUp size={18} />
+                <PenTool size={18} />
+                <Redo size={18} />
+                <Link2 size={18} />
+                <Menu size={18} />
+                <ChartBarIncreasing size={18} />
+                <RemoveFormatting size={18} />
               </div>
+              <textarea
+                name="description"
+                value={formik.values.description}
+                onChange={formik.handleChange}
+                placeholder="Description"
+                className="w-full p-3 h-40 outline-none"
+              />
             </div>
-            <input className="border w-full pt-2 pb-30 pl-3" placeholder="Description" type="text" />
-          </div>
-          <div className="flex items-center gap-2.5">
-            <select className="border w-full rounded-sm py-2 px-3 font-semibold" name="" id="">
-              <option value="">Categories</option>
-            </select>
-            <select className="border w-full rounded-sm py-2 px-3 font-semibold" name="" id="">
-              <option value="">Brands</option>
-            </select>
-          </div>
-          <div className="my-2">
-            <h1 className="px-1 my-2 font-semibold">Price</h1>
-            <div className="flex justify-between gap-2">
-              <Input className="py-2" placeholder="Product price" type="number" />
-              <Input className="py-2" placeholder="Discount" type="number" />
-              <Input className="py-2" placeholder="Count" type="number" />
+
+            {/* CATEGORY & BRAND */}
+            <div className="flex gap-2">
+              <select
+                name="subCategoryId"
+                value={formik.values.subCategoryId}
+                onChange={formik.handleChange}
+                className="border rounded-md w-full px-3 py-2"
+              >
+                <option value="">Categories</option>
+                {subCategories.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.subCategoryName}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                name="brandId"
+                value={formik.values.brandId}
+                onChange={formik.handleChange}
+                className="border rounded-md w-full px-3 py-2"
+              >
+                <option value="">Brands</option>
+                {brands.map((b) => (
+                  <option key={b.id} value={b.id}>
+                    {b.brandName}
+                  </option>
+                ))}
+              </select>
             </div>
-          </div>
-          <div className="flex items-center gap-1 px-2">
-            <input className="w-4 h-4" type="checkbox" />
-            <label htmlFor="">Add tax for this product</label>
-          </div>
-          <div className="flex justify-between gap-1 px-2 my-3 border rounded-sm p-3 items-center">
+
+            {/* PRICE */}
             <div>
-              <h1 className="font-bold text-[18px]">Different Options</h1>
-              <p>This product has multiple options</p>
-            </div>
-            <input className="w-4 h-4" type="checkbox" />
-          </div>
-          <div className="px-2 my-3 ">
-            <h1 className="font-semibold my-2">Options</h1>
-            <div className="grid grid-cols-2 gap-2">
-              <input className="border w-full rounded-sm py-2 px-3 font-semibold" type="text" placeholder="Size" />
-              <div className="border w-full rounded-sm py-2 px-3 font-semibold flex justify-between" >
-                <button className="bg-[#E6E9F4] px-3 py-1 rounded-sm text-[#7E84A3] flex gap-3"><span>S</span> <span>✕</span></button>
-                <button className="bg-[#E6E9F4] px-3 py-1 rounded-sm text-[#7E84A3] flex gap-3"><span>M</span> <span>✕</span></button>
-                <button className="bg-[#E6E9F4] px-3 py-1 rounded-sm text-[#7E84A3] flex gap-3"><span>L</span> <span>✕</span></button>
-                <button className="bg-[#E6E9F4] px-3 py-1 rounded-sm text-[#7E84A3] flex gap-3"><span>XL</span> <span>✕</span></button>
-              </div>
-              <input className="border w-full rounded-sm py-2 px-3 font-semibold" type="text" placeholder="Size" />
-              <div className="border w-full rounded-sm py-2 px-3 font-semibold flex justify-between" >
-                <button className="bg-[#E6E9F4] px-3 py-1 rounded-sm text-[#7E84A3] flex gap-3"><span>10</span> <span>✕</span></button>
-                <button className="bg-[#E6E9F4] px-3 py-1 rounded-sm text-[#7E84A3] flex gap-3"><span>20</span> <span>✕</span></button>
-                <button className="bg-[#E6E9F4] px-3 py-1 rounded-sm text-[#7E84A3] flex gap-3"><span>30</span> <span>✕</span></button>
-                <button className="bg-[#E6E9F4] px-3 py-1 rounded-sm text-[#7E84A3] flex gap-3"><span>40</span> <span>✕</span></button>
-              </div>
-              <input className="border w-full rounded-sm py-2 px-3 font-semibold" type="text" placeholder="Option 2" />
-              <input className="border w-full rounded-sm py-2 px-3 font-semibold" type="text" placeholder="Value" />
-            </div>
-            <button className='hover:bg-[#DBEAFE] text-[#1D4ED8] rounded-sm px-4 py-2 my-2 cursor-pointer transition-colors duration-300'>+ Add more</button>
-          </div>
-        </aside>
-        <aside className=" w-[40%] px-3">
-          <div className="rounded-sm  border p-3">
-            <div className="flex items-center justify-between gap-1">
-              <h1 className="font-semibold">Colour:</h1>
-              <h1 className="font-semibold text-[#2563EB]">✓ Create new</h1>
-            </div>
-            <div className="flex justify-between my-2">
-              <div className="bg-black rounded-full w-8 h-8"></div>
-              <div className="bg-[#E07575] rounded-full w-8 h-8"></div>
-              <div className="bg-[#6366F1] rounded-full w-8 h-8"></div>
-              <div className="bg-[#FFB71A] rounded-full w-8 h-8"></div>
-              <div className="bg-[#06A561] rounded-full w-8 h-8"></div>
-              <div className="bg-[#41434D] rounded-full w-8 h-8"></div>
-            </div>
-          </div>
-          <div className="rounded-sm  border p-3 my-2">
-            <div>
-              <h1 className="font-semibold">Tags</h1>
-            </div>
-            <div className="flex gap-2  my-2">
-              <input className="w-[65%] border rounded-sm shadow-sm px-3" placeholder="Tags name" type="text" />
-              <button className="border-[#2563EB] border px-3 py-1 rounded-sm text-[#2563EB]">✓</button>
-            </div>
-            <div className="my-3 flex gap-2 flex-wrap">
-              <span className="bg-[#E6E9F4] text-[#5A607F] p-2 rounded-sm">T-Shirt ✕</span>
-              <span className="bg-[#E6E9F4] text-[#5A607F] p-2 rounded-sm">Summer Collection ✕</span>
-              <span className="bg-[#E6E9F4] text-[#5A607F] p-2 rounded-sm">Men Clothes ✕</span>
-            </div>
-          </div>
-          <div className="rounded-sm  border p-3 my-2">
-            <div>
-              <h1 className="font-semibold">Images</h1>
-            </div>
-            <div className="relative group my-2">
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 flex flex-col items-center justify-center bg-white hover:bg-gray-50 transition-colors">
-                <Upload className="w-6 h-6 text-gray-600 mb-3" />
-                <p className="text-sm text-gray-700 text-center">
-                  {/* {formik.values.CategoryImage ? (
-                    <span className="text-blue-600 font-medium">{formik.values.CategoryImage.name}</span> */}
-                  {/* // ) : ( */}
-                  <span className="font-semibold underline cursor-pointer">Click to upload</span>
-                  {/* // )} */}
-                </p>
-                <input
-                  type="file"
-                  className="absolute inset-0 opacity-0 cursor-pointer"
-                  accept="image/*"
+              <h3 className="font-semibold mb-2">Price</h3>
+              <div className="flex gap-2">
+                <Input
+                  type="number"
+                  name="price"
+                  value={formik.values.price}
+                  onChange={formik.handleChange}
+                  placeholder="Product price"
+                />
+                <Input
+                  type="number"
+                  name="discountPrice"
+                  value={formik.values.discountPrice}
+                  onChange={formik.handleChange}
+                  placeholder="Discount"
+                />
+                <Input
+                  type="number"
+                  name="quantity"
+                  value={formik.values.quantity}
+                  onChange={formik.handleChange}
+                  placeholder="Count"
                 />
               </div>
             </div>
-          </div>
-          <div>
-            <div className="overflow-hidden rounded-lg border border-gray-200 shadow-sm">
-              <table className="w-full text-left border-collapse bg-white">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-4 font-semibold text-gray-900 text-sm">Image</th>
-                    <th className="px-6 py-4 font-semibold text-gray-900 text-sm">File name</th>
-                    <th className="px-6 py-4 font-semibold text-gray-900 text-sm text-center">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  <tr className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4">
-                      <div className="h-12 w-12 overflow-hidden rounded-md border border-gray-100">
-                        <img
-                          src={img5}
-                          alt="Category"
-                          className="h-full w-full object-cover"
-                        />
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-700 font-medium">
-                      Healthcare_Erbology.png
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      <button className="text-gray-400 hover:text-red-600 transition-colors p-2 rounded-full hover:bg-red-50">
-                        <Trash size={18} />
-                      </button>
-                    </td>
-                  </tr>
-                  <tr className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4">
-                      <div className="h-12 w-12 overflow-hidden rounded-md border border-gray-100">
-                        <img
-                          src={img5}
-                          alt="Category"
-                          className="h-full w-full object-cover"
-                        />
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-700 font-medium">
-                      Healthcare_Erbology.png
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      <button className="text-gray-400 hover:text-red-600 transition-colors p-2 rounded-full hover:bg-red-50">
-                        <Trash size={18} />
-                      </button>
-                    </td>
-                  </tr>
-                  <tr className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4">
-                      <div className="h-12 w-12 overflow-hidden rounded-md border border-gray-100">
-                        <img
-                          src={img5}
-                          alt="Category"
-                          className="h-full w-full object-cover"
-                        />
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-700 font-medium">
-                      Healthcare_Erbology.png
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      <button className="text-gray-400 hover:text-red-600 transition-colors p-2 rounded-full hover:bg-red-50">
-                        <Trash size={18} />
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+          </aside>
+
+          {/* RIGHT SIDE */}
+          <aside className="w-[40%] space-y-4">
+            {/* COLORS */}
+            <div className="border rounded-lg p-4 bg-white">
+              <div className="flex justify-between mb-3 items-center">
+                <h3 className="font-semibold">Colour:</h3>
+
+                {/* Create New Color */}
+                {newColor ? (
+                  <div className="flex gap-2 items-center">
+                    <input
+                      type="color"
+                      value={newColor}
+                      onChange={(e) => setNewColor(e.target.value)}
+                      className="w-8 h-8 rounded-full cursor-pointer"
+                    />
+                    <button
+                      type="button"
+                      className="text-[#2563EB] text-sm font-medium"
+                      onClick={async () => {
+                        await createColor(newColor)
+                        setNewColor("")
+                      }}
+                    >
+                      Add
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    className="text-[#2563EB] text-sm font-medium"
+                    onClick={() => setNewColor("#000000")}
+                  >
+                    ✓ Create new
+                  </button>
+                )}
+              </div>
+
+              <div className="flex items-center gap-4">
+                {colors.map((c) => {
+                  const selected = formik.values.colorId === c.id
+                  return (
+                    <button
+                      key={c.id}
+                      type="button"
+                      onClick={() => formik.setFieldValue("colorId", c.id)}
+                      className={`w-8 h-8 rounded-full transition-all
+                        ${selected ? "ring-2 ring-[#2563EB] ring-offset-2" : ""}`}
+                      style={{ backgroundColor: c.colorName }}
+                    />
+                  )
+                })}
+              </div>
             </div>
-          </div>
-        </aside>
-      </section>
-    </main>
+
+            {/* IMAGES */}
+            <div className="border rounded-lg p-4">
+              <h3 className="font-semibold mb-2">Images</h3>
+
+              <div className="relative border border-dashed rounded-lg p-10 bg-gray-50 text-center">
+                <Upload className="mx-auto mb-3" />
+                <span className="underline cursor-pointer">
+                  Click to upload
+                </span>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  onChange={(e) => handleImageUpload(e.target.files)}
+                />
+              </div>
+            </div>
+
+            {/* IMAGE LIST */}
+            {images.length > 0 && (
+              <div className="border rounded-lg overflow-hidden">
+                <table className="w-full">
+                  <thead className="bg-gray-50 text-sm">
+                    <tr>
+                      <th className="px-4 py-2">Image</th>
+                      <th className="px-4 py-2">File name</th>
+                      <th className="px-4 py-2 text-center">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {images.map((img, index) => (
+                      <tr key={index} className="border-t">
+                        <td className="px-4 py-2">
+                          <img
+                            src={URL.createObjectURL(img)}
+                            className="w-12 h-12 object-cover rounded-md border"
+                          />
+                        </td>
+                        <td className="px-4 py-2 text-sm">{img.name}</td>
+                        <td className="px-4 py-2 text-center">
+                          <button
+                            type="button"
+                            onClick={() => removeImage(index)}
+                            className="text-gray-500 hover:text-red-600"
+                          >
+                            <Trash size={18} />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </aside>
+        </section>
+      </main>
+    </form>
   )
 }
 

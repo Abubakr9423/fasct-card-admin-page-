@@ -1,213 +1,208 @@
-import { create } from 'zustand';
-import { axiosRequest } from '@/util/axios';
+import { create } from "zustand"
+import { axiosRequest } from "@/util/axios"
 
-interface Color {
-    id: number;
-    colorName: string;
+/* ================= TYPES ================= */
+
+export interface Color {
+    id: number
+    colorName: string // hex or name
 }
 
-interface SubCategory {
-    id: number;
-    subCategoryName: string;
+export interface Brand {
+    id: number
+    brandName: string
 }
 
-interface Brand {
-    id: number;
-    brandName: string;
+export interface SubCategory {
+    id: number
+    subCategoryName: string
 }
 
-interface AddProductState {
-    // Form Fields
-    productName: string;
-    description: string;
-    code: string;
-    price: number;
-    discountPrice: number;
-    quantity: number;
-    weight: string;
-    size: string;
-    brandId: number | string; // keeping flexible for placeholder
-    colorId: number | null;
-    subCategoryId: number | string; // keeping flexible for select
-    images: File[];
+interface ProductState {
+    // FORM
+    productName: string
+    description: string
+    code: string
+    price: number
+    discountPrice: number
+    quantity: number
+    weight: string
+    size: string
+    brandId: number | string
+    subCategoryId: number | string
+    colorId: number | null
+    images: File[]
 
-    // Data Lists
-    colors: Color[];
-    subCategories: SubCategory[];
-    brands: Brand[];
+    // DATA
+    colors: Color[]
+    brands: Brand[]
+    subCategories: SubCategory[]
 
-    // UI State
-    loading: boolean;
-    error: string | null;
-    success: boolean;
+    // UI
+    loading: boolean
+    error: string | null
+    success: boolean
 
-    // Actions
-    fetchAttributes: () => Promise<void>;
-    setField: (field: keyof AddProductState, value: any) => void;
-    handleImageUpload: (files: FileList | null) => void;
-    removeImage: (index: number) => void;
-    submitProduct: () => Promise<void>;
-    resetForm: () => void;
+    // ACTIONS
+    fetchAttributes: () => Promise<void>
+    fetchProductById: (id: number) => Promise<void>
+    createColor: (colorName: string) => Promise<void>
+
+    setField: (key: keyof ProductState, value: any) => void
+    handleImageUpload: (files: FileList | null) => void
+    removeImage: (index: number) => void
+
+    submitProduct: (id?: number) => Promise<void>
+    resetForm: () => void
 }
 
-export const useAddProductStore = create<AddProductState>((set, get) => ({
-    // Initial State
-    productName: '',
-    description: '',
-    code: '',
+/* ================= STORE ================= */
+
+export const useAddProductStore = create<ProductState>((set, get) => ({
+    // INITIAL STATE
+    productName: "",
+    description: "",
+    code: "",
     price: 0,
     discountPrice: 0,
     quantity: 0,
-    weight: '',
-    size: '',
-    brandId: '', // Default empty
+    weight: "",
+    size: "",
+    brandId: "",
+    subCategoryId: "",
     colorId: null,
-    subCategoryId: '', // Default empty
     images: [],
 
     colors: [],
-    subCategories: [],
     brands: [],
+    subCategories: [],
 
     loading: false,
     error: null,
     success: false,
 
+    /* ---------- FETCH DROPDOWNS ---------- */
     fetchAttributes: async () => {
-        set({ loading: true, error: null });
+        set({ loading: true })
         try {
-            const [colorsRes, subCatsRes, brandsRes] = await Promise.all([
-                axiosRequest.get('/Color/get-colors'),
-                axiosRequest.get('/SubCategory/get-sub-category'),
-                axiosRequest.get('/Brand/get-brands'),
-            ]);
+            const [c, b, s] = await Promise.all([
+                axiosRequest.get("/Color/get-colors"),
+                axiosRequest.get("/Brand/get-brands"),
+                axiosRequest.get("/SubCategory/get-sub-category"),
+            ])
 
             set({
-                colors: colorsRes.data.data,
-                subCategories: subCatsRes.data.data,
-                brands: brandsRes.data.data,
+                colors: c.data.data,
+                brands: b.data.data,
+                subCategories: s.data.data,
                 loading: false,
-            });
-        } catch (error: any) {
-            console.error('Failed to fetch attributes:', error);
-            set({
-                loading: false,
-                error: error.message || 'Failed to fetch attributes'
-            });
+            })
+        } catch (e: any) {
+            set({ loading: false, error: e.message })
         }
     },
 
-    setField: (field, value) => {
-        set((state) => ({ ...state, [field]: value }));
+    /* ---------- FETCH PRODUCT (EDIT) ---------- */
+    fetchProductById: async (id) => {
+        set({ loading: true })
+        try {
+            const res = await axiosRequest.get(`/Product/get-product/${id}`)
+            const p = res.data.data
+
+            set({
+                productName: p.productName,
+                description: p.description,
+                code: p.code,
+                price: p.price,
+                discountPrice: p.discountPrice,
+                quantity: p.quantity,
+                brandId: p.brandId,
+                subCategoryId: p.subCategoryId,
+                colorId: p.colorId,
+                weight: p.weight,
+                size: p.size,
+                images: [],
+                loading: false,
+            })
+        } catch (e: any) {
+            set({ loading: false, error: e.message })
+        }
     },
+
+    /* ---------- CREATE COLOR ---------- */
+    createColor: async (colorName) => {
+        await axiosRequest.post("/Color/create", { colorName })
+        const res = await axiosRequest.get("/Color/get-colors")
+        set({ colors: res.data.data })
+    },
+
+    /* ---------- HELPERS ---------- */
+    setField: (key, value) => set({ [key]: value } as any),
 
     handleImageUpload: (files) => {
-        if (files) {
-            set((state) => ({
-                images: [...state.images, ...Array.from(files)],
-            }));
+        if (!files) return
+        set((s) => ({ images: [...s.images, ...Array.from(files)] }))
+    },
+
+    removeImage: (index) =>
+        set((s) => ({
+            images: s.images.filter((_, i) => i !== index),
+        })),
+
+    /* ---------- SUBMIT (CREATE + EDIT) ---------- */
+    submitProduct: async (id) => {
+        const s = get()
+        set({ loading: true, error: null })
+
+        try {
+            const fd = new FormData()
+
+            fd.append("ProductName", s.productName)
+            fd.append("Description", s.description)
+            fd.append("Code", s.code)
+            fd.append("Weight", s.weight)
+            fd.append("Size", s.size)
+            fd.append("Price", s.price.toString())
+            fd.append("DiscountPrice", s.discountPrice.toString())
+            fd.append("Quantity", s.quantity.toString())
+
+            if (s.brandId) fd.append("BrandId", s.brandId.toString())
+            if (s.subCategoryId) fd.append("SubCategoryId", s.subCategoryId.toString())
+            if (s.colorId) fd.append("ColorId", s.colorId.toString())
+
+            fd.append("HasDiscount", (s.discountPrice > 0).toString())
+
+            s.images.forEach((img) => fd.append("Images", img))
+
+            if (id) {
+                await axiosRequest.put(`/Product/update-product/${id}`, fd)
+            } else {
+                await axiosRequest.post("/Product/add-product", fd)
+            }
+
+            set({ loading: false, success: true })
+            get().resetForm()
+        } catch (e: any) {
+            set({ loading: false, error: e.message })
         }
     },
 
-    removeImage: (index) => {
-        set((state) => ({
-            images: state.images.filter((_, i) => i !== index),
-        }));
-    },
-
-    resetForm: () => {
+    /* ---------- RESET ---------- */
+    resetForm: () =>
         set({
-            productName: '',
-            description: '',
-            code: '',
+            productName: "",
+            description: "",
+            code: "",
             price: 0,
             discountPrice: 0,
             quantity: 0,
-            weight: '',
-            size: '',
-            brandId: '',
+            weight: "",
+            size: "",
+            brandId: "",
+            subCategoryId: "",
             colorId: null,
-            subCategoryId: '',
             images: [],
             success: false,
             error: null,
-        });
-    },
-
-    submitProduct: async () => {
-        const state = get();
-        set({ loading: true, error: null, success: false });
-
-        try {
-            const formData = new FormData();
-
-            // Text fields
-            formData.append('ProductName', state.productName || '');
-            formData.append('Description', state.description || '');
-            formData.append('Code', state.code || '');
-            formData.append('Weight', state.weight || '');
-            formData.append('Size', state.size || '');
-
-            // Numeric fields - Strict parsing
-            const price = parseFloat(state.price.toString());
-            const discountPrice = parseFloat(state.discountPrice.toString());
-            const quantity = parseInt(state.quantity.toString());
-
-            // Only append if it's a valid number (NaN check)
-            if (!isNaN(price)) formData.append('Price', price.toString());
-            if (!isNaN(discountPrice)) formData.append('DiscountPrice', discountPrice.toString());
-            if (!isNaN(quantity)) formData.append('Quantity', quantity.toString());
-
-            // IDs - Strict INT32 parsing
-            // BrandId
-            const brandId = parseInt(state.brandId.toString());
-            if (!isNaN(brandId) && brandId > 0) {
-                formData.append('BrandId', brandId.toString());
-            }
-
-            // SubCategoryId
-            const subCatId = parseInt(state.subCategoryId.toString());
-            if (!isNaN(subCatId) && subCatId > 0) {
-                formData.append('SubCategoryId', subCatId.toString());
-            }
-
-            
-            // ColorId
-            if (state.colorId) {
-                const colorId = parseInt(state.colorId.toString());
-                if (!isNaN(colorId) && colorId > 0) {
-                    formData.append('ColorId', colorId.toString());
-                }
-            }
-
-            // Boolean
-            const hasDiscount = discountPrice > 0;
-            formData.append('HasDiscount', hasDiscount.toString());
-
-            // Images
-            if (state.images && state.images.length > 0) {
-                state.images.forEach((file) => {
-                    formData.append('Images', file);
-                });
-            }
-
-            // Debug Logging
-            console.log('Submitting Product FormData:');
-            for (const pair of formData.entries()) {
-                console.log(pair[0], pair[1]);
-            }
-
-            await axiosRequest.post('/Product/add-product', formData);
-
-            set({ loading: false, success: true });
-            get().resetForm();
-
-        } catch (error: any) {
-            console.error('Failed to submit product:', error);
-            set({
-                loading: false,
-                error: error.response?.data?.message || error.message || 'Failed to submit product'
-            });
-        }
-    },
-}));
+        }),
+}))
