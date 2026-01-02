@@ -159,7 +159,7 @@ const Categories = () => {
                     <button onClick={() => handleEdit(e)} className="hover:bg-gray-700 hover:text-white p-2 rounded-full transition-colors duration-300">
                       <Pencil size={18} />
                     </button>
-                    <button onClick={() => { if (window.confirm("Delete?")) deleteCategory(e.id) }} className="hover:bg-gray-700 hover:text-white p-2 rounded-full transition-colors duration-300">
+                    <button onClick={() => {  deleteCategory(e.id) }} className="hover:bg-gray-700 hover:text-white p-2 rounded-full transition-colors duration-300">
                       <Trash size={18} />
                     </button>
                   </div>
