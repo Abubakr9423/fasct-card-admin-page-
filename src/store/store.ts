@@ -62,6 +62,10 @@ interface CategoryState {
     deleteCategory: (id: number) => Promise<void>;
     editCategory: (formdata: FormData) => Promise<void>;
 }
+interface LogState {
+    loginUser: (values: any) => Promise<void>;
+}
+
 
 
 export const useBeras = create<LogState>((set) => ({
@@ -69,7 +73,7 @@ export const useBeras = create<LogState>((set) => ({
     token: null,
     loading: false,
     error: null,
-    loginUser: async (values) => {
+    loginUser: async (values): Promise<void> => {
         set({ loading: true, error: null });
         try {
             const response = await axiosRequest.post("/Account/login", values);
@@ -81,11 +85,11 @@ export const useBeras = create<LogState>((set) => ({
                 loading: false,
                 error: null,
             });
-            return true; 
+            return true; // ✅ success
         } catch (err: any) {
             let message = err.response?.data?.message || err.message || "Unexpected error";
             set({ loading: false, error: message });
-            return false; 
+            return false; // ❌ failure
         }
     }
 }));

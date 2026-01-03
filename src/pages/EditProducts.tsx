@@ -53,13 +53,18 @@ const EditProduct = () => {
       Object.entries(values).forEach(([key, value]) => {
         setField(key as any, value)
       })
-      await submitProduct() // backend should detect update by ID
-    },
+      if (id) {
+        await submitProduct(Number(id))
+      } else {
+        await submitProduct()
+      }
+    }
+
   })
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <main className="px-5">
+      <main className="p-5">
         {/* HEADER */}
         <div className="flex justify-between mb-4">
           <h1 className="text-2xl font-bold">Products / Edit</h1>

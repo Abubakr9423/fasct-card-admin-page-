@@ -97,7 +97,7 @@ export const useAddProductStore = create<ProductState>((set, get) => ({
     fetchProductById: async (id) => {
         set({ loading: true })
         try {
-            const res = await axiosRequest.get(`/Product/get-product/${id}`)
+            const res = await axiosRequest.get(`Product/get-product-by-id?id=${id}`)
             const p = res.data.data
 
             set({
@@ -163,7 +163,28 @@ export const useAddProductStore = create<ProductState>((set, get) => ({
             s.images.forEach((img) => fd.append("Images", img))
 
             if (id) {
-                await axiosRequest.put(`/Product/update-product/${id}`, fd)
+                const params = new URLSearchParams({
+                    Id: String(id),
+                    BrandId: String(s.brandId),
+                    ColorId: String(s.colorId || ""),
+                    SubCategoryId: String(s.subCategoryId),
+                });
+
+                const fd = new FormData();
+                fd.append("ProductName", s.productName);
+                fd.append("Description", s.description);
+                fd.append("Code", s.code);
+                fd.append("Price", String(s.price));
+                fd.append("DiscountPrice", String(s.discountPrice));
+                fd.append("Quantity", String(s.quantity));
+                fd.append("HasDiscount", (s.discountPrice > 0).toString());
+                s.images.forEach(img => fd.append("Images", img));
+
+                await axiosRequest.put(
+                    `https://store-api.softclub.tj/Product/update-product?${params.toString()}`,
+                    fd
+                );
+
             } else {
                 await axiosRequest.post("/Product/add-product", fd)
             }

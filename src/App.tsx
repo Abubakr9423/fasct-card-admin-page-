@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
+import EditProduct from "./pages/EditProducts";
 
 const Layout = lazy(() => import("./pages/Layout"));
 const Login = lazy(() => import("./pages/Login"));
@@ -38,6 +39,7 @@ const router = createBrowserRouter([
         ],
       },
       { path: "addproducts", element: <AddProduct /> },
+      { path: "/editUser/:id", element: <EditProduct /> },
     ],
   },
 ]);
