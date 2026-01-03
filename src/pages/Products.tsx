@@ -106,7 +106,7 @@ const Products = () => {
 
                 <td className="px-4 py-3">
                   <div className='flex gap-2'>
-                    <button className='text-[#1E5EFF]'><Pencil /></button>
+                    <button onClick={() => naviget(`/editUser/${e.id}`)} className='text-[#1E5EFF] cursor-pointer'><Pencil /></button>
                     <button onClick={() => deleteProduct(e.id)} className='text-[red]'><Trash /></button>
                   </div>
                 </td>

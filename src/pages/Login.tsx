@@ -35,16 +35,16 @@ const Login = () => {
         onSubmit: async (values) => {
             await loginUser({ userName: values.email, password: values.password });
 
+            if (error) {
+                setAccessError(error);
+                return;
+            }
+
             const token = GetToken();
             if (typeof token === "string" && token.trim() !== "") {
                 const decoded: any = jwtDecode(token);
-                const rawRoles =
-                    decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-                const roles = Array.isArray(rawRoles)
-                    ? rawRoles
-                    : rawRoles
-                        ? [rawRoles]
-                        : [];
+                const rawRoles = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+                const roles = Array.isArray(rawRoles) ? rawRoles : rawRoles ? [rawRoles] : [];
 
                 const hasAccess = roles.includes("SuperAdmin") || roles.includes("Admin");
 
@@ -58,12 +58,11 @@ const Login = () => {
             } else {
                 setAccessError("Password or name is incorrect");
             }
-        },
+        }
     });
 
     return (
         <main className="flex justify-between text-white h-screen">
-            {/* Left side */}
             <aside className="bg-[#1D2739] w-[50%] flex items-center justify-start p-10">
                 <div>
                     <p className="text-[18px]">Welcome to admin panel</p>
@@ -71,7 +70,6 @@ const Login = () => {
                 </div>
             </aside>
 
-            {/* Right side */}
             <aside className="flex items-center justify-center w-[50%] text-black p-10">
                 <form
                     onSubmit={handleSubmit}
@@ -105,7 +103,6 @@ const Login = () => {
                         Log in
                     </Button>
 
-                    {/* Error messages */}
                     {error && <p className="text-red-500">{error}</p>}
                     {accessError && <p className="text-red-500">{accessError}</p>}
                 </form>

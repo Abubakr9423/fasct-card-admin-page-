@@ -1,58 +1,22 @@
-import { useProfileStore } from "@/store/store";
-import { Pencil, Trash } from "lucide-react";
+import { Trash } from "lucide-react";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useFormik } from "formik";
+import { Formik, Form, Field } from "formik";
+import { useProfileStore } from "@/store/store";
 
 const Orders = () => {
-  const { data, fetchPrfile, deleteprofile, getrole, data1 } = useProfileStore(
-    (state) => state
-  );
+  const { data, fetchProfile, deleteProfile, getRole, data1, addRole } =
+    useProfileStore((state) => state);
 
   useEffect(() => {
-    fetchPrfile();
-    getrole()
+    fetchProfile();
+    getRole();
   }, []);
-
-  console.log(data1);
-
-
-  const { handleChange, handleSubmit, setFieldValue, values } = useFormik({
-    initialValues: {
-      image: "",
-      FirstName: "",
-      LastName: "",
-      Email: "",
-      PhoneNumber: "",
-      Dob: "",
-    },
-    onSubmit: (values) => {
-      console.log(values);
-      const formdata = new FormData();
-      formdata.append("FirstName", values.FirstName);
-      formdata.append("LastName", values.LastName);
-      formdata.append("Email", values.Email);
-      formdata.append("PhoneNumber", values.PhoneNumber);
-      formdata.append("Dob", values.Dob);
-      formdata.append("image", values.image);
-      console.log("Submitting:", Object.fromEntries(formdata));
-    },
-  });
-
-
-
 
   return (
     <div className="p-6">
@@ -104,7 +68,7 @@ const Orders = () => {
                 <div className="flex gap-2 justify-center">
                   <Button
                     className="text-[#F04438]"
-                    onClick={() => deleteprofile(e.userId)}
+                    onClick={() => deleteProfile(e.userId)}
                     variant="outline"
                   >
                     <Trash />
@@ -116,92 +80,55 @@ const Orders = () => {
                         className="text-[#1E5EFF]"
                         variant="outline"
                       >
-                        <Pencil />
+                        Add Role
                       </Button>
                     </DialogTrigger>
 
                     <DialogContent className="sm:max-w-[425px]">
-                      <form onSubmit={handleSubmit}>
-                        <DialogHeader>
-                          <DialogTitle>Edit profile</DialogTitle>
-                          <DialogDescription>
-                            Make changes to your profile here. Click save when you&apos;re done.
-                          </DialogDescription>
-                        </DialogHeader>
+                      <Formik
+                        initialValues={{ roleId: "" }}
+                        onSubmit={async (values, { setSubmitting, resetForm }) => {
+                          if (!values.roleId) {
+                            alert("Please select a role");
+                            setSubmitting(false);
+                            return;
+                          }
+                          try {
+                            // roleId comes from <option value={role.id}>
+                            await addRole(e.userId, Number(values.roleId));
+                            resetForm();
+                          } catch (error) {
+                            console.error("Failed to add role:", error);
+                          } finally {
+                            setSubmitting(false);
+                          }
+                        }}
+                      >
+                        {({ isSubmitting }) => (
+                          <Form className="flex flex-col gap-4">
+                            <label htmlFor="roleId" className="text-sm font-medium">
+                              Select Role
+                            </label>
 
-                        <div className="grid gap-4">
-                          <div className="grid gap-3">
-                            <Label htmlFor="firstName">First Name</Label>
-                            <Input
-                              id="firstName"
-                              name="FirstName"
-                              value={values.FirstName}
-                              onChange={handleChange}
-                            />
-                          </div>
+                            <Field as="select" name="roleId" className="border rounded p-2">
+                              <option value="">-- Choose a role --</option>
+                              {data1?.map((role) => (
+                                <option key={role.id} value={role.id}>
+                                  {role.name}
+                                </option>
+                              ))}
+                            </Field>
 
-                          <div className="grid gap-3">
-                            <Label htmlFor="lastName">Last Name</Label>
-                            <Input
-                              id="lastName"
-                              name="LastName"
-                              value={values.LastName}
-                              onChange={handleChange}
-                            />
-                          </div>
-
-                          <div className="grid gap-3">
-                            <Label htmlFor="email">Email</Label>
-                            <Input
-                              id="email"
-                              name="Email"
-                              value={values.Email}
-                              onChange={handleChange}
-                            />
-                          </div>
-
-                          <div className="grid gap-3">
-                            <Label htmlFor="phone">Phone Number</Label>
-                            <Input
-                              id="phone"
-                              name="PhoneNumber"
-                              value={values.PhoneNumber}
-                              onChange={handleChange}
-                            />
-                          </div>
-
-                          <div className="grid gap-3">
-                            <Label htmlFor="dob">Date of Birth</Label>
-                            <Input
-                              id="dob"
-                              name="Dob"
-                              value={values.Dob}
-                              onChange={handleChange}
-                            />
-                          </div>
-
-                          <div className="grid gap-3">
-                            <Label htmlFor="image">Profile Image</Label>
-                            <Input
-                              id="image"
-                              name="image"
-                              type="file"
-                              accept="image/*"
-                              onChange={(event) => {
-                                const file = event.currentTarget.files?.[0];
-                                setFieldValue("image", file);
-                              }}
-                            />
-                          </div>
-                        </div>
-
-                        <DialogFooter>
-                          <DialogClose asChild>
-                            <Button variant="outline">Cancel</Button>
-                          </DialogClose>
-                          <Button type="submit">Save changes</Button>
-                        </DialogFooter>
-                      </form>
+                            <Button
+                              type="submit"
+                              disabled={isSubmitting}
+                              className="bg-[#1E5EFF] text-white"
+                            >
+                              {isSubmitting ? "Adding..." : "Add Role"}
+                            </Button>
+                          </Form>
+                        )}
+                      </Formik>
                     </DialogContent>
                   </Dialog>
                 </div>
