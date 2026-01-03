@@ -30,6 +30,7 @@ const EditProduct = () => {
     subCategoryId,
     colorId,
   } = useAddProductStore()
+  // console.log(code);
 
   useEffect(() => {
     fetchAttributes()
@@ -41,7 +42,7 @@ const EditProduct = () => {
     initialValues: {
       productName,
       description,
-      code,
+      code: code + Date.now(),
       price,
       discountPrice,
       quantity,
@@ -65,7 +66,6 @@ const EditProduct = () => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <main className="p-5">
-        {/* HEADER */}
         <div className="flex justify-between mb-4">
           <h1 className="text-2xl font-bold">Products / Edit</h1>
           <div className="flex gap-2">
@@ -80,7 +80,6 @@ const EditProduct = () => {
         </div>
 
         <section className="flex gap-4">
-          {/* LEFT */}
           <aside className="w-[60%] space-y-4">
             <Input
               name="productName"
@@ -152,9 +151,7 @@ const EditProduct = () => {
             </div>
           </aside>
 
-          {/* RIGHT */}
           <aside className="w-[40%] space-y-4">
-            {/* COLORS */}
             <div className="border rounded-lg p-4">
               <h3 className="font-semibold mb-3">Colour</h3>
               <div className="flex gap-4">
@@ -176,7 +173,6 @@ const EditProduct = () => {
               </div>
             </div>
 
-            {/* IMAGES */}
             <div className="border rounded-lg p-4">
               <h3 className="font-semibold mb-2">Images</h3>
               <div className="relative border-dashed border rounded-lg p-8 text-center">
