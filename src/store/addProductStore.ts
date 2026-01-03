@@ -1,11 +1,10 @@
 import { create } from "zustand"
 import { axiosRequest } from "@/util/axios"
 
-/* ================= TYPES ================= */
 
 export interface Color {
     id: number
-    colorName: string // hex or name
+    colorName: string 
 }
 
 export interface Brand {
@@ -19,7 +18,6 @@ export interface SubCategory {
 }
 
 interface ProductState {
-    // FORM
     productName: string
     description: string
     code: string
@@ -33,17 +31,13 @@ interface ProductState {
     colorId: number | null
     images: File[]
 
-    // DATA
     colors: Color[]
     brands: Brand[]
     subCategories: SubCategory[]
 
-    // UI
     loading: boolean
     error: string | null
     success: boolean
-
-    // ACTIONS
     fetchAttributes: () => Promise<void>
     fetchProductById: (id: number) => Promise<void>
     createColor: (colorName: string) => Promise<void>
@@ -56,7 +50,6 @@ interface ProductState {
     resetForm: () => void
 }
 
-/* ================= STORE ================= */
 
 export const useAddProductStore = create<ProductState>((set, get) => ({
     // INITIAL STATE
@@ -81,7 +74,6 @@ export const useAddProductStore = create<ProductState>((set, get) => ({
     error: null,
     success: false,
 
-    /* ---------- FETCH DROPDOWNS ---------- */
     fetchAttributes: async () => {
         set({ loading: true })
         try {
@@ -102,7 +94,6 @@ export const useAddProductStore = create<ProductState>((set, get) => ({
         }
     },
 
-    /* ---------- FETCH PRODUCT (EDIT) ---------- */
     fetchProductById: async (id) => {
         set({ loading: true })
         try {
@@ -129,14 +120,12 @@ export const useAddProductStore = create<ProductState>((set, get) => ({
         }
     },
 
-    /* ---------- CREATE COLOR ---------- */
     createColor: async (colorName) => {
         await axiosRequest.post("/Color/create", { colorName })
         const res = await axiosRequest.get("/Color/get-colors")
         set({ colors: res.data.data })
     },
 
-    /* ---------- HELPERS ---------- */
     setField: (key, value) => set({ [key]: value } as any),
 
     handleImageUpload: (files) => {
@@ -149,7 +138,6 @@ export const useAddProductStore = create<ProductState>((set, get) => ({
             images: s.images.filter((_, i) => i !== index),
         })),
 
-    /* ---------- SUBMIT (CREATE + EDIT) ---------- */
     submitProduct: async (id) => {
         const s = get()
         set({ loading: true, error: null })
@@ -187,7 +175,6 @@ export const useAddProductStore = create<ProductState>((set, get) => ({
         }
     },
 
-    /* ---------- RESET ---------- */
     resetForm: () =>
         set({
             productName: "",

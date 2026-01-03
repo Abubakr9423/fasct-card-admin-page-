@@ -81,11 +81,11 @@ export const useBeras = create<LogState>((set) => ({
                 loading: false,
                 error: null,
             });
-            return true; // ✅ success
+            return true; 
         } catch (err: any) {
             let message = err.response?.data?.message || err.message || "Unexpected error";
             set({ loading: false, error: message });
-            return false; // ❌ failure
+            return false; 
         }
     }
 }));
@@ -248,32 +248,30 @@ export interface Profile {
 interface ProfileState {
     data: Profile[] | null;
     data1: UserRole[] | null;
-    fetchPrfile: () => Promise<void>;
-    deleteprofile: (id: number) => Promise<void>;
+    fetchProfile: () => Promise<void>;
+    deleteProfile: (id: number) => Promise<void>;
     editProfile: (obj: FormData) => Promise<void>;
-    addrole: (id: number) => Promise<void>;
-    getrole: () => Promise<void>;
+    addRole: (iduser: number, idrole: number) => Promise<void>;
+    getRole: () => Promise<void>;
 }
 
 export const useProfileStore = create<ProfileState>((set, get) => ({
     data: null,
     data1: null,
 
-    fetchPrfile: async () => {
+    fetchProfile: async () => {
         try {
-            const response = await axiosRequest.get(
-                "https://store-api.softclub.tj/UserProfile/get-user-profiles"
-            );
+            const response = await axiosRequest.get("/UserProfile/get-user-profiles");
             set({ data: response.data.data });
         } catch (error) {
             console.error("Failed to fetch profiles:", error);
         }
     },
 
-    deleteprofile: async (id: number) => {
+    deleteProfile: async (id: number) => {
         try {
             await axiosRequest.delete(`/UserProfile/delete-user?id=${id}`);
-            await get().fetchPrfile();
+            await get().fetchProfile();
         } catch (error) {
             console.error("Failed to delete profile:", error);
         }
@@ -282,27 +280,26 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
     editProfile: async (obj: FormData) => {
         try {
             await axiosRequest.put(`/UserProfile/update-user`, obj);
-            await get().fetchPrfile();
+            await get().fetchProfile();
         } catch (error) {
             console.error("Failed to edit profile:", error);
         }
     },
 
-    addrole: async (id: number) => {
+    addRole: async (userId: number, roleId: number) => {
         try {
             await axiosRequest.post(
-                `/UserProfile/addrole-from-user?UserId=${id}&RoleId=efw`
+                `/UserProfile/addrole-from-user?UserId=${userId}&RoleId=${roleId}`
             );
+            await get().fetchProfile(); 
         } catch (error) {
             console.error("Failed to add role:", error);
         }
     },
 
-    getrole: async () => {
+    getRole: async () => {
         try {
-            const response = await axiosRequest.get(
-                "https://store-api.softclub.tj/UserProfile/get-user-roles"
-            );
+            const response = await axiosRequest.get("/UserProfile/get-user-roles");
             set({ data1: response.data.data });
         } catch (error) {
             console.error("Failed to fetch roles:", error);
