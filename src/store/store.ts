@@ -253,7 +253,7 @@ interface ProfileState {
     fetchProfile: () => Promise<void>;
     deleteProfile: (id: number) => Promise<void>;
     editProfile: (obj: FormData) => Promise<void>;
-    addRole: (iduser: number, idrole: number) => Promise<void>;
+    addRole: (iduser: number, idrole: string) => Promise<void>;
     getRole: () => Promise<void>;
 }
 
@@ -288,7 +288,7 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
         }
     },
 
-    addRole: async (userId: number, roleId: number) => {
+    addRole: async (userId: number, roleId: string) => {
         try {
             await axiosRequest.post(
                 `/UserProfile/addrole-from-user?UserId=${userId}&RoleId=${roleId}`

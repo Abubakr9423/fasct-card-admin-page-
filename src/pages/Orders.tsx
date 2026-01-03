@@ -88,6 +88,8 @@ const Orders = () => {
                       <Formik
                         initialValues={{ roleId: "" }}
                         onSubmit={async (values, { setSubmitting, resetForm }) => {
+                          console.log(values);
+                          
                           if (!values.roleId) {
                             alert("Please select a role");
                             setSubmitting(false);
@@ -95,7 +97,7 @@ const Orders = () => {
                           }
                           try {
                             // roleId comes from <option value={role.id}>
-                            await addRole(e.userId, Number(values.roleId));
+                            await addRole(e.userId,values.roleId);
                             resetForm();
                           } catch (error) {
                             console.error("Failed to add role:", error);
