@@ -85,11 +85,9 @@ export const useBeras = create<LogState>((set) => ({
                 loading: false,
                 error: null,
             });
-            return true; // ✅ success
         } catch (err: any) {
             let message = err.response?.data?.message || err.message || "Unexpected error";
             set({ loading: false, error: message });
-            return false; // ❌ failure
         }
     }
 }));
@@ -295,7 +293,7 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
             await axiosRequest.post(
                 `/UserProfile/addrole-from-user?UserId=${userId}&RoleId=${roleId}`
             );
-            await get().fetchProfile(); 
+            await get().fetchProfile();
         } catch (error) {
             console.error("Failed to add role:", error);
         }
