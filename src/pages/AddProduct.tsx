@@ -13,6 +13,7 @@ import {
   Upload,
 } from "lucide-react"
 import { useAddProductStore } from "@/store/addProductStore"
+import { useNavigate } from "react-router-dom"
 
 interface AddProductProps {
   productId?: number // optional, for edit mode
@@ -35,6 +36,8 @@ const AddProduct = ({ productId }: AddProductProps) => {
   } = useAddProductStore()
 
   const [newColor, setNewColor] = useState("")
+
+  const navigaete = useNavigate()
 
   useEffect(() => {
     fetchAttributes()
@@ -61,6 +64,7 @@ const AddProduct = ({ productId }: AddProductProps) => {
         setField(key as any, value)
       })
       await submitProduct(productId)
+      navigaete("/products")
       formik.resetForm()
     },
   })
